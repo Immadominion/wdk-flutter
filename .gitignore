@@ -1,0 +1,27 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+**/pubspec_overrides.yaml
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+
+# Secrets / local config — NEVER commit keys
+.env
+*.env
+**/local.properties
+**/key.properties
+**/*.keystore
+**/*.jks
+
+# Melos
+.melos_tool/

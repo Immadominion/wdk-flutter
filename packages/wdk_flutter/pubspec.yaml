@@ -1,0 +1,29 @@
+name: wdk_flutter
+description: >-
+  Flutter provider for Tether's Wallet Development Kit (WDK). The Flutter analog
+  of @tetherto/wdk-react-native-provider: it starts the WDK Bare worklet via
+  flutter_bare_kit, speaks the worklet's RPC protocol, and exposes a WdkService
+  facade plus Riverpod providers that reproduce the React Native useWallet() API.
+version: 0.0.1
+publish_to: none
+repository: https://github.com/Immadominion/wdk-starter-flutter
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^2.6.1
+  flutter_bare_kit:
+    path: ../flutter_bare_kit
+  flutter_secure_storage: ^9.2.4
+  local_auth: ^2.3.0
+  http: ^1.2.2
+  meta: ^1.15.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

@@ -1,0 +1,32 @@
+name: flutter_bare_kit
+description: >-
+  Flutter binding for Holepunch's Bare runtime. Embeds the Bare native libraries
+  (the same layer react-native-bare-kit uses) to load and run a Bare worklet
+  bundle and exchange messages with it over an IPC pipe. Used to run Tether's
+  unmodified @tetherto/pear-wrk-wdk WDK worklet inside a Flutter app.
+version: 0.0.1
+publish_to: none
+repository: https://github.com/Immadominion/wdk-starter-flutter
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: dev.web3flutter.flutter_bare_kit
+        pluginClass: FlutterBareKitPlugin
+      ios:
+        pluginClass: FlutterBareKitPlugin

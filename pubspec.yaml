@@ -1,0 +1,10 @@
+# Root of the WDK-for-Flutter Melos workspace.
+# This package is not published; it only orchestrates the packages/ and apps/ members.
+name: wdk_starter_flutter_workspace
+publish_to: none
+
+environment:
+  sdk: ">=3.11.0 <4.0.0"
+
+dev_dependencies:
+  melos: ^6.3.2
