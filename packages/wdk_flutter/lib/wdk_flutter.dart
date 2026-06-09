@@ -10,6 +10,7 @@
 ///     [transactionsProvider], and the granular state providers).
 library;
 
+export 'src/address_validation.dart';
 export 'src/rpc/secret_manager_rpc.dart';
 export 'src/rpc/wdk_manager_rpc.dart';
 export 'src/rpc/worklet_rpc.dart';
