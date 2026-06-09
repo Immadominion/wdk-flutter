@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_bare_kit/flutter_bare_kit.dart' as bare;
 
+import 'hrpc_worklet_rpc.dart';
 import 'secret_manager_rpc.dart';
 import 'wdk_manager_rpc.dart';
 import 'worklet_rpc.dart';
@@ -26,13 +27,15 @@ class BareKitIpcPipe implements IpcPipe {
 /// Starts the two WDK worklets via `flutter_bare_kit` and returns the typed
 /// RPC wrappers, ready to inject into [WdkService].
 ///
-/// > ⚠️ The real worklet speaks **HRPC** (binary, compact-encoding). The
-/// > default [rpcFactory] uses [JsonFrameWorkletRpc], which is the
-/// > transport-agnostic reference codec — correct in *semantics* but not in
-/// > *wire format*. To talk to the shipped worklet, pass an `rpcFactory` that
-/// > builds an HRPC codec matching `spec/hrpc/hrpc.json`. Implementing +
-/// > validating that codec on-device is the final M2 task (see
-/// > NATIVE_INTEGRATION.md).
+/// Wire format: the real worklets speak **HRPC** (`bare-rpc` framing over
+/// `compact-encoding`). The **secret-manager** worklet uses [HrpcWorkletRpc]
+/// with [HrpcProtocol.secretManager] — a byte-exact port verified against the
+/// real encoder (`tools/parity/`). The **manager** (`@wdk-core`) worklet still
+/// uses [JsonFrameWorkletRpc] (semantically faithful, not yet wire-faithful):
+/// its body codecs are version-sensitive and are ported once the pinned
+/// `pear-wrk-wdk` (beta.4) is available on-device (see `tools/parity/README.md`).
+///
+/// Pass [rpcFactory] to override both transports (used by tests/preview).
 class WdkWorkletBinding {
   const WdkWorkletBinding._();
 
@@ -41,7 +44,10 @@ class WdkWorkletBinding {
     required Uint8List secretBundle,
     WorkletRpc Function(IpcPipe pipe)? rpcFactory,
   }) async {
-    final WorkletRpc Function(IpcPipe) make =
+    final WorkletRpc Function(IpcPipe) secretMake =
+        rpcFactory ??
+        (IpcPipe p) => HrpcWorkletRpc(p, HrpcProtocol.secretManager());
+    final WorkletRpc Function(IpcPipe) managerMake =
         rpcFactory ?? (IpcPipe p) => JsonFrameWorkletRpc(p);
 
     final bare.Worklet secretW = await bare.Worklet.start(
@@ -54,8 +60,8 @@ class WdkWorkletBinding {
     );
 
     return (
-      secret: SecretManagerRpc(make(BareKitIpcPipe(secretW.ipc))),
-      manager: WdkManagerRpc(make(BareKitIpcPipe(managerW.ipc))),
+      secret: SecretManagerRpc(secretMake(BareKitIpcPipe(secretW.ipc))),
+      manager: WdkManagerRpc(managerMake(BareKitIpcPipe(managerW.ipc))),
     );
   }
 }

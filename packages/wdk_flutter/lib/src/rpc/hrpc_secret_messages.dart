@@ -37,7 +37,8 @@ class SecretManagerMessages {
         if (flags & 1 != 0) e.string(m['payload'] as String);
 
       case '$_ns/command-generateAndEncrypt-request':
-        final int flags = (_str(m['passkey']) ? 1 : 0) |
+        final int flags =
+            (_str(m['passkey']) ? 1 : 0) |
             (_str(m['salt']) ? 2 : 0) |
             (_str(m['seedPhrase']) ? 4 : 0) |
             (_str(m['derivedKey']) ? 8 : 0);
@@ -48,14 +49,16 @@ class SecretManagerMessages {
         if (flags & 8 != 0) e.string(m['derivedKey'] as String);
 
       case '$_ns/command-generateAndEncrypt-response':
-        final int flags = (_str(m['encryptedEntropy']) ? 1 : 0) |
+        final int flags =
+            (_str(m['encryptedEntropy']) ? 1 : 0) |
             (_str(m['encryptedSeed']) ? 2 : 0);
         e.uint(flags);
         if (flags & 1 != 0) e.string(m['encryptedEntropy'] as String);
         if (flags & 2 != 0) e.string(m['encryptedSeed'] as String);
 
       case '$_ns/command-decrypt-request':
-        final int flags = (_str(m['passkey']) ? 1 : 0) |
+        final int flags =
+            (_str(m['passkey']) ? 1 : 0) |
             (_str(m['salt']) ? 2 : 0) |
             (_str(m['encryptedData']) ? 4 : 0) |
             (_str(m['derivedKey']) ? 8 : 0);
@@ -71,8 +74,7 @@ class SecretManagerMessages {
         if (flags & 1 != 0) e.string(m['result'] as String);
 
       case '$_ns/command-log-request':
-        final int flags =
-            (_num(m['type']) ? 1 : 0) | (_str(m['data']) ? 2 : 0);
+        final int flags = (_num(m['type']) ? 1 : 0) | (_str(m['data']) ? 2 : 0);
         e.uint(flags);
         if (flags & 1 != 0) e.uint(m['type'] as int); // log-type enum = uint
         if (flags & 2 != 0) e.string(m['data'] as String);

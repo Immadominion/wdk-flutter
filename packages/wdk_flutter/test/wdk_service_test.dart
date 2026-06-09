@@ -12,8 +12,12 @@ void main() {
   group('JsonFrameWorkletRpc (id correlation over an IPC pipe)', () {
     test('correlates concurrent responses by id and echoes params', () async {
       final JsonFrameWorkletRpc rpc = JsonFrameWorkletRpc(
-        LoopbackPipe((String method, Map<String, Object?> params) =>
-            <String, Object?>{'method': method, 'echo': params['n']}),
+        LoopbackPipe(
+          (String method, Map<String, Object?> params) => <String, Object?>{
+            'method': method,
+            'echo': params['n'],
+          },
+        ),
       );
       final List<Map<String, Object?>> results = await Future.wait(
         <Future<Map<String, Object?>>>[
@@ -41,35 +45,42 @@ void main() {
   });
 
   group('WdkService preview mode (no worklet binding)', () {
-    test('quote/send throw WorkletUnavailable until the M2 binding lands', () async {
-      final WdkService svc = WdkService(storage: InMemorySecretStorage());
-      await expectLater(
-        svc.quoteSendByNetwork(
-          network: NetworkType.ethereum,
-          accountIndex: 0,
-          amount: 1,
-          recipient: '0xabc',
-          asset: AssetTicker.usdt,
-        ),
-        throwsA(isA<WorkletUnavailable>()),
-      );
-    });
+    test(
+      'quote/send throw WorkletUnavailable until the M2 binding lands',
+      () async {
+        final WdkService svc = WdkService(storage: InMemorySecretStorage());
+        await expectLater(
+          svc.quoteSendByNetwork(
+            network: NetworkType.ethereum,
+            accountIndex: 0,
+            amount: 1,
+            recipient: '0xabc',
+            asset: AssetTicker.usdt,
+          ),
+          throwsA(isA<WorkletUnavailable>()),
+        );
+      },
+    );
   });
 
   group('WdkService.createSeed', () {
     test('encrypts, persists, and derives a 12-word mnemonic', () async {
       final WdkService svc = WdkService(
         storage: InMemorySecretStorage(),
-        secretManager: SecretManagerRpc(FakeWorkletRpc(<String, Responder>{
-          'commandWorkletStart': (_) => <String, Object?>{'status': 'started'},
-          'commandGenerateAndEncrypt': (_) => <String, Object?>{
-                'encryptedEntropy': 'aa',
-                'encryptedSeed': 'bb',
-              },
-          'commandDecrypt': (_) => <String, Object?>{
-                'result': '00000000000000000000000000000000',
-              },
-        })),
+        secretManager: SecretManagerRpc(
+          FakeWorkletRpc(<String, Responder>{
+            'commandWorkletStart': (_) => <String, Object?>{
+              'status': 'started',
+            },
+            'commandGenerateAndEncrypt': (_) => <String, Object?>{
+              'encryptedEntropy': 'aa',
+              'encryptedSeed': 'bb',
+            },
+            'commandDecrypt': (_) => <String, Object?>{
+              'result': '00000000000000000000000000000000',
+            },
+          }),
+        ),
       );
 
       final String mnemonic = await svc.createSeed(prf: 'device-123');
@@ -79,13 +90,17 @@ void main() {
   });
 
   group('WdkService quote/send routing', () {
-    WdkService managerService(FakeWorkletRpc rpc) =>
-        WdkService(wdkManager: WdkManagerRpc(rpc), storage: InMemorySecretStorage());
+    WdkService managerService(FakeWorkletRpc rpc) => WdkService(
+      wdkManager: WdkManagerRpc(rpc),
+      storage: InMemorySecretStorage(),
+    );
 
     test('SegWit quote divides the fee by 1e8', () async {
-      final WdkService svc = managerService(FakeWorkletRpc(<String, Responder>{
-        'quoteSendTransaction': (_) => <String, Object?>{'fee': '5000'},
-      }));
+      final WdkService svc = managerService(
+        FakeWorkletRpc(<String, Responder>{
+          'quoteSendTransaction': (_) => <String, Object?>{'fee': '5000'},
+        }),
+      );
       final double fee = await svc.quoteSendByNetwork(
         network: NetworkType.segwit,
         accountIndex: 0,
@@ -97,9 +112,13 @@ void main() {
     });
 
     test('EVM quote uses abstracted transfer and divides by 1e6', () async {
-      final WdkService svc = managerService(FakeWorkletRpc(<String, Responder>{
-        'abstractedAccountQuoteTransfer': (_) => <String, Object?>{'fee': '3000'},
-      }));
+      final WdkService svc = managerService(
+        FakeWorkletRpc(<String, Responder>{
+          'abstractedAccountQuoteTransfer': (_) => <String, Object?>{
+            'fee': '3000',
+          },
+        }),
+      );
       final double fee = await svc.quoteSendByNetwork(
         network: NetworkType.ethereum,
         accountIndex: 0,
@@ -111,10 +130,14 @@ void main() {
     });
 
     test('EVM send returns the broadcast hash', () async {
-      final WdkService svc = managerService(FakeWorkletRpc(<String, Responder>{
-        'abstractedAccountTransfer': (_) =>
-            <String, Object?>{'hash': '0xdeadbeef', 'fee': '20'},
-      }));
+      final WdkService svc = managerService(
+        FakeWorkletRpc(<String, Responder>{
+          'abstractedAccountTransfer': (_) => <String, Object?>{
+            'hash': '0xdeadbeef',
+            'fee': '20',
+          },
+        }),
+      );
       final SendResult r = await svc.sendByNetwork(
         network: NetworkType.ethereum,
         accountIndex: 0,
@@ -148,10 +171,12 @@ void main() {
           }),
         ),
       );
-      svc.setConfig(const WdkConfig(
-        indexer: IndexerConfig(apiKey: 'k', url: 'https://x'),
-        chains: <String, Object?>{},
-      ));
+      svc.setConfig(
+        const WdkConfig(
+          indexer: IndexerConfig(apiKey: 'k', url: 'https://x'),
+          chains: <String, Object?>{},
+        ),
+      );
 
       final List<WalletBalance> balances = await svc.resolveWalletBalances(
         <AssetTicker>[AssetTicker.usdt],
@@ -193,8 +218,11 @@ class FakeWorkletRpc implements WorkletRpc {
 /// An [IpcPipe] that synchronously answers each sent frame via [responder].
 class LoopbackPipe implements IpcPipe {
   LoopbackPipe(this.responder);
-  final Map<String, Object?> Function(String method, Map<String, Object?> params)
-      responder;
+  final Map<String, Object?> Function(
+    String method,
+    Map<String, Object?> params,
+  )
+  responder;
   final StreamController<Uint8List> _ctrl =
       StreamController<Uint8List>.broadcast();
 

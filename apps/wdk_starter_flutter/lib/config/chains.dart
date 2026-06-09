@@ -66,10 +66,7 @@ Map<String, Object?> getChainsConfig() {
       },
       'transferMaxFee': 1000000000,
     },
-    'bitcoin': <String, Object?>{
-      'host': 'api.ordimint.com',
-      'port': 50001,
-    },
+    'bitcoin': <String, Object?>{'host': 'api.ordimint.com', 'port': 50001},
     'tron': <String, Object?>{
       'chainId': 3448148188,
       'provider': 'https://trongrid.io',

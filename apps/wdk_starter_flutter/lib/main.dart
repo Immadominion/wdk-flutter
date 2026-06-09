@@ -38,8 +38,9 @@ WdkConfig _buildConfig() {
 }
 
 /// Boots the WDK engine once (mirrors the RN `_layout.tsx` initialize call).
-final FutureProvider<void> bootstrapProvider =
-    FutureProvider<void>((Ref ref) async {
+final FutureProvider<void> bootstrapProvider = FutureProvider<void>((
+  Ref ref,
+) async {
   final WdkConfig config = ref.read(wdkConfigProvider);
   await ref.read(wdkServiceProvider).initialize(config);
   ref.read(walletProvider.notifier).markInitialized();
@@ -98,7 +99,10 @@ final GoRouter _router = GoRouter(
       path: '/send/select-network',
       builder: (_, _) => const SelectNetworkScreen(flow: TxFlow.send),
     ),
-    GoRoute(path: '/send/details', builder: (_, _) => const SendDetailsScreen()),
+    GoRoute(
+      path: '/send/details',
+      builder: (_, _) => const SendDetailsScreen(),
+    ),
     GoRoute(
       path: '/receive/select-token',
       builder: (_, _) => const SelectTokenScreen(flow: TxFlow.receive),
@@ -162,11 +166,14 @@ class OnboardingScreen extends ConsumerWidget {
             children: <Widget>[
               Icon(Icons.account_balance_wallet, size: 64, color: t.primary),
               const SizedBox(height: 16),
-              Text('WDK Wallet',
-                  style: TextStyle(
-                      color: t.textPrimary,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700)),
+              Text(
+                'WDK Wallet',
+                style: TextStyle(
+                  color: t.textPrimary,
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
               const SizedBox(height: 8),
               Text(
                 'A self-custodial multi-chain wallet powered by Tether WDK.',
@@ -202,8 +209,9 @@ class AuthorizeScreen extends ConsumerWidget {
           icon: const Icon(Icons.fingerprint),
           label: const Text('Unlock'),
           onPressed: () async {
-            final bool ok =
-                await ref.read(walletProvider.notifier).unlockWallet();
+            final bool ok = await ref
+                .read(walletProvider.notifier)
+                .unlockWallet();
             if (ok && context.mounted) context.go('/wallet');
           },
         ),
@@ -288,7 +296,9 @@ class WalletScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: <Widget>[
-          const Center(child: WdkBalance(value: '0.00', currency: 'USD')),
+          const Center(
+            child: WdkBalance(value: '0.00', currency: 'USD'),
+          ),
           const SizedBox(height: 24),
           Row(
             children: <Widget>[
@@ -312,8 +322,10 @@ class WalletScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('Recent activity',
-                style: TextStyle(color: context.wdk.textSecondary)),
+            child: Text(
+              'Recent activity',
+              style: TextStyle(color: context.wdk.textSecondary),
+            ),
           ),
           WdkTransactionList(items: txs.map(_toTxItem).toList()),
         ],
@@ -323,12 +335,12 @@ class WalletScreen extends ConsumerWidget {
 }
 
 WdkTxItem _toTxItem(TransactionRecord t) => WdkTxItem(
-      sent: false,
-      token: assetSymbol(t.asset),
-      amount: t.amount,
-      network: networkOption(t.network).name,
-      timestamp: t.timestamp,
-    );
+  sent: false,
+  token: assetSymbol(t.asset),
+  amount: t.amount,
+  network: networkOption(t.network).name,
+  timestamp: t.timestamp,
+);
 
 class AssetsScreen extends ConsumerWidget {
   const AssetsScreen({super.key});
@@ -407,8 +419,8 @@ class SelectTokenScreen extends ConsumerWidget {
       body: WdkAssetSelector(
         options: supportedAssets.map(assetOption).toList(),
         onSelected: (WdkAssetOption o) {
-          ref.read(selectedAssetProvider.notifier).state =
-              AssetTicker.values.firstWhere((AssetTicker a) => assetSymbol(a) == o.symbol);
+          ref.read(selectedAssetProvider.notifier).state = AssetTicker.values
+              .firstWhere((AssetTicker a) => assetSymbol(a) == o.symbol);
           context.go('$base/select-network');
         },
       ),
@@ -438,8 +450,9 @@ class SelectNetworkScreen extends ConsumerWidget {
       body: WdkNetworkSelector(
         options: networksForAsset(asset).map(networkOption).toList(),
         onSelected: (WdkNetworkOption o) {
-          ref.read(selectedNetworkProvider.notifier).state =
-              NetworkType.fromId(o.id);
+          ref.read(selectedNetworkProvider.notifier).state = NetworkType.fromId(
+            o.id,
+          );
           context.go('$base/details');
         },
       ),
@@ -474,7 +487,9 @@ class _SendDetailsScreenState extends ConsumerState<SendDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(onPressed: () => context.go('/send/select-network')),
+        leading: BackButton(
+          onPressed: () => context.go('/send/select-network'),
+        ),
         title: Text('Send ${assetSymbol(asset)}'),
       ),
       body: ListView(
@@ -505,7 +520,9 @@ class _SendDetailsScreenState extends ConsumerState<SendDetailsScreen> {
 
   Future<void> _send(AssetTicker asset, NetworkType network) async {
     try {
-      final SendResult r = await ref.read(wdkServiceProvider).sendByNetwork(
+      final SendResult r = await ref
+          .read(wdkServiceProvider)
+          .sendByNetwork(
             network: network,
             accountIndex: 0,
             amount: double.parse(_amount),
@@ -513,9 +530,9 @@ class _SendDetailsScreenState extends ConsumerState<SendDetailsScreen> {
             asset: asset,
           );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Sent: ${r.hash}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Sent: ${r.hash}')));
       }
     } on WorkletUnavailable {
       if (mounted) {
@@ -529,8 +546,9 @@ class _SendDetailsScreenState extends ConsumerState<SendDetailsScreen> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Error: $e')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: $e')));
       }
     }
   }
@@ -556,8 +574,9 @@ class ReceiveDetailsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        leading:
-            BackButton(onPressed: () => context.go('/receive/select-network')),
+        leading: BackButton(
+          onPressed: () => context.go('/receive/select-network'),
+        ),
         title: Text('Receive ${assetSymbol(asset)}'),
       ),
       body: Center(
@@ -566,7 +585,9 @@ class ReceiveDetailsScreen extends ConsumerWidget {
           child: Column(
             children: <Widget>[
               if (!addresses.containsKey(network))
-                _Banner('Sample address — real addresses come from the worklet (M2).'),
+                _Banner(
+                  'Sample address — real addresses come from the worklet (M2).',
+                ),
               const SizedBox(height: 16),
               WdkQrCode(data: address, label: address),
             ],
@@ -578,12 +599,12 @@ class ReceiveDetailsScreen extends ConsumerWidget {
 }
 
 String _sampleAddress(NetworkType n) => switch (n) {
-      NetworkType.segwit => 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
-      NetworkType.ton => 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
-      NetworkType.tron => 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
-      NetworkType.solana => 'So11111111111111111111111111111111111111112',
-      _ => '0x52908400098527886E0F7030069857D2E4169EE7',
-    };
+  NetworkType.segwit => 'bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4',
+  NetworkType.ton => 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
+  NetworkType.tron => 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+  NetworkType.solana => 'So11111111111111111111111111111111111111112',
+  _ => '0x52908400098527886E0F7030069857D2E4169EE7',
+};
 
 // --- Shared -----------------------------------------------------------------
 
@@ -605,8 +626,10 @@ class _Banner extends StatelessWidget {
           Icon(Icons.info_outline, size: 18, color: t.primary),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(text,
-                style: TextStyle(color: t.textSecondary, fontSize: 12)),
+            child: Text(
+              text,
+              style: TextStyle(color: t.textSecondary, fontSize: 12),
+            ),
           ),
         ],
       ),

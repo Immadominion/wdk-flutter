@@ -31,8 +31,10 @@ class WdkManagerRpc {
     required String network,
     required int accountIndex,
   }) async {
-    final Map<String, Object?> r = await _rpc.call('getAddress',
-        <String, Object?>{'network': network, 'accountIndex': accountIndex});
+    final Map<String, Object?> r = await _rpc.call(
+      'getAddress',
+      <String, Object?>{'network': network, 'accountIndex': accountIndex},
+    );
     return (r['address'] ?? '').toString();
   }
 
@@ -41,8 +43,10 @@ class WdkManagerRpc {
     required String network,
     required int accountIndex,
   }) async {
-    final Map<String, Object?> r = await _rpc.call('getAbstractedAddress',
-        <String, Object?>{'network': network, 'accountIndex': accountIndex});
+    final Map<String, Object?> r = await _rpc.call(
+      'getAbstractedAddress',
+      <String, Object?>{'network': network, 'accountIndex': accountIndex},
+    );
     return (r['address'] ?? '').toString();
   }
 
@@ -53,12 +57,14 @@ class WdkManagerRpc {
     required String to,
     required String value,
   }) async {
-    final Map<String, Object?> r =
-        await _rpc.call('quoteSendTransaction', <String, Object?>{
-      'network': network,
-      'accountIndex': accountIndex,
-      'options': <String, Object?>{'to': to, 'value': value},
-    });
+    final Map<String, Object?> r = await _rpc.call(
+      'quoteSendTransaction',
+      <String, Object?>{
+        'network': network,
+        'accountIndex': accountIndex,
+        'options': <String, Object?>{'to': to, 'value': value},
+      },
+    );
     return (r['fee'] ?? '0').toString();
   }
 
@@ -71,19 +77,21 @@ class WdkManagerRpc {
     required String amount,
     required String paymasterTokenAddress,
   }) async {
-    final Map<String, Object?> r =
-        await _rpc.call('abstractedAccountQuoteTransfer', <String, Object?>{
-      'network': network,
-      'accountIndex': accountIndex,
-      'options': <String, Object?>{
-        'recipient': recipient,
-        'token': token,
-        'amount': amount,
+    final Map<String, Object?> r = await _rpc.call(
+      'abstractedAccountQuoteTransfer',
+      <String, Object?>{
+        'network': network,
+        'accountIndex': accountIndex,
+        'options': <String, Object?>{
+          'recipient': recipient,
+          'token': token,
+          'amount': amount,
+        },
+        'config': <String, Object?>{
+          'paymasterToken': <String, Object?>{'address': paymasterTokenAddress},
+        },
       },
-      'config': <String, Object?>{
-        'paymasterToken': <String, Object?>{'address': paymasterTokenAddress},
-      },
-    });
+    );
     return (r['fee'] ?? '0').toString();
   }
 

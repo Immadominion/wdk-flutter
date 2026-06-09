@@ -40,15 +40,23 @@ void main() {
     });
 
     test('WdkService.getDenominationValue returns the multiplier', () {
-      expect(WdkService.instance.getDenominationValue(AssetTicker.btc), 100000000);
-      expect(WdkService.instance.getDenominationValue(AssetTicker.usdt), 1000000);
+      expect(
+        WdkService.instance.getDenominationValue(AssetTicker.btc),
+        100000000,
+      );
+      expect(
+        WdkService.instance.getDenominationValue(AssetTicker.usdt),
+        1000000,
+      );
     });
   });
 
   group('asset → network map matches the provider', () {
     test('BTC=SegWit only; XAUT=Ethereum only; USDT spans EVM+TON', () {
       expect(assetNetworks[AssetTicker.btc], <NetworkType>[NetworkType.segwit]);
-      expect(assetNetworks[AssetTicker.xaut], <NetworkType>[NetworkType.ethereum]);
+      expect(assetNetworks[AssetTicker.xaut], <NetworkType>[
+        NetworkType.ethereum,
+      ]);
       expect(assetNetworks[AssetTicker.usdt], contains(NetworkType.ton));
     });
 

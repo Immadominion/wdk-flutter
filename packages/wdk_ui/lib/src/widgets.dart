@@ -41,7 +41,10 @@ class WdkBalance extends StatelessWidget {
         ),
         if (currency.isNotEmpty) ...<Widget>[
           const SizedBox(width: 6),
-          Text(currency, style: TextStyle(color: t.textSecondary, fontSize: 18)),
+          Text(
+            currency,
+            style: TextStyle(color: t.textSecondary, fontSize: 18),
+          ),
         ],
       ],
     );
@@ -139,8 +142,9 @@ class WdkAmountInput extends StatelessWidget {
               Expanded(
                 child: TextField(
                   onChanged: onChanged,
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   style: TextStyle(
                     color: t.textPrimary,
                     fontSize: 28,
@@ -153,8 +157,10 @@ class WdkAmountInput extends StatelessWidget {
                   ),
                 ),
               ),
-              Text(symbol,
-                  style: TextStyle(color: t.textSecondary, fontSize: 18)),
+              Text(
+                symbol,
+                style: TextStyle(color: t.textSecondary, fontSize: 18),
+              ),
               if (onMax != null) ...<Widget>[
                 const SizedBox(width: 8),
                 TextButton(onPressed: onMax, child: const Text('MAX')),
@@ -166,8 +172,10 @@ class WdkAmountInput extends StatelessWidget {
           if (balanceLabel != null)
             Padding(
               padding: const EdgeInsets.only(top: 4),
-              child: Text('Balance: $balanceLabel',
-                  style: TextStyle(color: t.textSecondary, fontSize: 12)),
+              child: Text(
+                'Balance: $balanceLabel',
+                style: TextStyle(color: t.textSecondary, fontSize: 12),
+              ),
             ),
         ],
       ),
@@ -251,7 +259,10 @@ class WdkNetworkSelector extends StatelessWidget {
       itemBuilder: (BuildContext context, int i) {
         final WdkNetworkOption o = options[i];
         return ListTile(
-          leading: CircleAvatar(backgroundColor: o.color ?? t.primary, radius: 10),
+          leading: CircleAvatar(
+            backgroundColor: o.color ?? t.primary,
+            radius: 10,
+          ),
           title: Text(o.name, style: TextStyle(color: t.textPrimary)),
           onTap: () => onSelected(o),
         );
@@ -312,19 +323,24 @@ class WdkTransactionList extends StatelessWidget {
             tx.sent ? Icons.arrow_upward : Icons.arrow_downward,
             color: tx.sent ? t.danger : t.success,
           ),
-          title: Text('${tx.sent ? 'Sent' : 'Received'} ${tx.token}',
-              style: TextStyle(color: t.textPrimary)),
+          title: Text(
+            '${tx.sent ? 'Sent' : 'Received'} ${tx.token}',
+            style: TextStyle(color: t.textPrimary),
+          ),
           subtitle: Text(tx.network, style: TextStyle(color: t.textSecondary)),
           trailing: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: <Widget>[
-              Text('${tx.sent ? '-' : '+'}${tx.amount}',
-                  style: TextStyle(
-                      color: tx.sent ? t.textPrimary : t.success)),
+              Text(
+                '${tx.sent ? '-' : '+'}${tx.amount}',
+                style: TextStyle(color: tx.sent ? t.textPrimary : t.success),
+              ),
               if (tx.fiat != null)
-                Text(tx.fiat!,
-                    style: TextStyle(color: t.textSecondary, fontSize: 12)),
+                Text(
+                  tx.fiat!,
+                  style: TextStyle(color: t.textSecondary, fontSize: 12),
+                ),
             ],
           ),
         );
@@ -353,17 +369,15 @@ class WdkQrCode extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: QrImageView(
-            data: data,
-            version: QrVersions.auto,
-            size: size,
-          ),
+          child: QrImageView(data: data, version: QrVersions.auto, size: size),
         ),
         if (label != null) ...<Widget>[
           const SizedBox(height: 12),
-          Text(label!,
-              textAlign: TextAlign.center,
-              style: TextStyle(color: t.textSecondary)),
+          Text(
+            label!,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: t.textSecondary),
+          ),
         ],
       ],
     );
@@ -396,7 +410,10 @@ class _WdkSeedPhraseState extends State<WdkSeedPhrase> {
           children: <Widget>[
             for (int i = 0; i < widget.words.length; i++)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: t.card,
                   borderRadius: BorderRadius.circular(8),

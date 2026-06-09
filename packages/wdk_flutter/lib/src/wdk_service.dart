@@ -29,13 +29,12 @@ class WdkService {
     SecretStorage? storage,
     WdkIndexerClient Function(IndexerConfig config)? indexerFactory,
     int Function()? clockMs,
-  })  : _secret = secretManager,
-        _manager = wdkManager,
-        _storage = storage ?? FlutterSecureStorageSecretStorage(),
-        _indexerFactory =
-            indexerFactory ?? ((IndexerConfig c) => WdkIndexerClient(c)),
-        _clockMs =
-            clockMs ?? (() => DateTime.now().millisecondsSinceEpoch);
+  }) : _secret = secretManager,
+       _manager = wdkManager,
+       _storage = storage ?? FlutterSecureStorageSecretStorage(),
+       _indexerFactory =
+           indexerFactory ?? ((IndexerConfig c) => WdkIndexerClient(c)),
+       _clockMs = clockMs ?? (() => DateTime.now().millisecondsSinceEpoch);
 
   final SecretManagerRpc? _secret;
   final WdkManagerRpc? _manager;
@@ -106,7 +105,10 @@ class WdkService {
 
     final String status = await secret.commandWorkletStart();
     if (status != 'started') {
-      throw const WdkError(code: 'worklet', message: 'Error while starting the worklet.');
+      throw const WdkError(
+        code: 'worklet',
+        message: 'Error while starting the worklet.',
+      );
     }
 
     final EncryptedSecret enc = await secret.commandGenerateAndEncrypt(
@@ -128,7 +130,8 @@ class WdkService {
 
   /// Returns the stored mnemonic for [prf], or null if none is stored.
   Future<String?> retrieveSeed(String prf) async {
-    final bool hasAll = await _storage.contains(SecretKey.entropy) &&
+    final bool hasAll =
+        await _storage.contains(SecretKey.entropy) &&
         await _storage.contains(SecretKey.seed) &&
         await _storage.contains(SecretKey.salt);
     if (!hasAll) return null;
@@ -140,7 +143,10 @@ class WdkService {
 
     final String status = await secret.commandWorkletStart();
     if (status != 'started') {
-      throw const WdkError(code: 'worklet', message: 'Error while starting the worklet.');
+      throw const WdkError(
+        code: 'worklet',
+        message: 'Error while starting the worklet.',
+      );
     }
     final String entropyHex = await secret.commandDecrypt(
       passkey: prf,
@@ -175,10 +181,14 @@ class WdkService {
   Future<void> clearWallet() async {
     try {
       await _manager?.workletStop();
-    } catch (_) {/* worklet may not be running */}
+    } catch (_) {
+      /* worklet may not be running */
+    }
     try {
       await _secret?.commandWorkletStop();
-    } catch (_) {/* worklet may not be running */}
+    } catch (_) {
+      /* worklet may not be running */
+    }
     await _storage.deleteAll();
   }
 
@@ -189,7 +199,10 @@ class WdkService {
     if (network == NetworkType.segwit) {
       return manager.getAddress(network: network.id, accountIndex: index);
     }
-    return manager.getAbstractedAddress(network: network.id, accountIndex: index);
+    return manager.getAbstractedAddress(
+      network: network.id,
+      accountIndex: index,
+    );
   }
 
   /// Resolves a network→address map for the enabled assets. Mirrors the RN
@@ -232,8 +245,9 @@ class WdkService {
     final WdkManagerRpc manager = _requireManager;
     try {
       if (network == NetworkType.segwit) {
-        final String value =
-            (amount * getDenominationValue(AssetTicker.btc)).round().toString();
+        final String value = (amount * getDenominationValue(AssetTicker.btc))
+            .round()
+            .toString();
         final String fee = await manager.quoteSendTransaction(
           network: 'bitcoin',
           accountIndex: accountIndex,
@@ -270,8 +284,9 @@ class WdkService {
   }) async {
     final WdkManagerRpc manager = _requireManager;
     if (network == NetworkType.segwit) {
-      final String value =
-          (amount * getDenominationValue(AssetTicker.btc)).round().toString();
+      final String value = (amount * getDenominationValue(AssetTicker.btc))
+          .round()
+          .toString();
       final Map<String, Object?> r = await manager.sendTransaction(
         network: network.id,
         accountIndex: accountIndex,
@@ -284,8 +299,9 @@ class WdkService {
       );
     } else if (abstractedNetworks.contains(network)) {
       final String token = _tokenAddress(asset, network);
-      final String amt =
-          (amount * getDenominationValue(AssetTicker.usdt)).round().toString();
+      final String amt = (amount * getDenominationValue(AssetTicker.usdt))
+          .round()
+          .toString();
       final Map<String, Object?> r = await manager.abstractedAccountTransfer(
         network: network.id,
         accountIndex: accountIndex,
@@ -337,24 +353,31 @@ class WdkService {
         _indexer ?? (throw StateError('Indexer not configured'));
     final List<BalanceQuery> queries = <BalanceQuery>[];
     for (final AssetTicker asset in enabledAssets) {
-      for (final NetworkType network in assetNetworks[asset] ?? const <NetworkType>[]) {
+      for (final NetworkType network
+          in assetNetworks[asset] ?? const <NetworkType>[]) {
         final String? address = addressMap[network];
         if (address != null) {
-          queries.add(BalanceQuery(
-            blockchain: network.id,
-            token: asset.id,
-            address: address,
-          ));
+          queries.add(
+            BalanceQuery(
+              blockchain: network.id,
+              token: asset.id,
+              address: address,
+            ),
+          );
         }
       }
     }
-    final Map<String, TokenBalance> map = await indexer.batchTokenBalances(queries);
+    final Map<String, TokenBalance> map = await indexer.batchTokenBalances(
+      queries,
+    );
     return map.values
-        .map((TokenBalance b) => WalletBalance(
-              asset: AssetTicker.fromId(b.token),
-              network: NetworkType.fromId(b.blockchain),
-              amount: b.amount,
-            ))
+        .map(
+          (TokenBalance b) => WalletBalance(
+            asset: AssetTicker.fromId(b.token),
+            network: NetworkType.fromId(b.blockchain),
+            amount: b.amount,
+          ),
+        )
         .toList();
   }
 
@@ -367,35 +390,42 @@ class WdkService {
         _indexer ?? (throw StateError('Indexer not configured'));
     final List<TransferQuery> queries = <TransferQuery>[];
     for (final AssetTicker asset in enabledAssets) {
-      for (final NetworkType network in assetNetworks[asset] ?? const <NetworkType>[]) {
+      for (final NetworkType network
+          in assetNetworks[asset] ?? const <NetworkType>[]) {
         final String? address = addressMap[network];
         if (address != null) {
-          queries.add(TransferQuery(
-            blockchain: network.id,
-            token: asset.id,
-            address: address,
-          ));
+          queries.add(
+            TransferQuery(
+              blockchain: network.id,
+              token: asset.id,
+              address: address,
+            ),
+          );
         }
       }
     }
-    final Map<String, List<IndexerTransfer>> map =
-        await indexer.batchTokenTransfers(queries);
+    final Map<String, List<IndexerTransfer>> map = await indexer
+        .batchTokenTransfers(queries);
     final List<TransactionRecord> out = <TransactionRecord>[];
     for (final List<IndexerTransfer> transfers in map.values) {
       for (final IndexerTransfer t in transfers) {
-        out.add(TransactionRecord(
-          transactionHash: t.transactionHash,
-          network: NetworkType.fromId(t.blockchain),
-          asset: AssetTicker.fromId(t.token),
-          amount: t.amount,
-          timestamp: DateTime.fromMillisecondsSinceEpoch(t.timestamp * 1000),
-          from: t.from,
-          to: t.to,
-        ));
+        out.add(
+          TransactionRecord(
+            transactionHash: t.transactionHash,
+            network: NetworkType.fromId(t.blockchain),
+            asset: AssetTicker.fromId(t.token),
+            amount: t.amount,
+            timestamp: DateTime.fromMillisecondsSinceEpoch(t.timestamp * 1000),
+            from: t.from,
+            to: t.to,
+          ),
+        );
       }
     }
-    out.sort((TransactionRecord a, TransactionRecord b) =>
-        b.timestamp.compareTo(a.timestamp));
+    out.sort(
+      (TransactionRecord a, TransactionRecord b) =>
+          b.timestamp.compareTo(a.timestamp),
+    );
     return out;
   }
 

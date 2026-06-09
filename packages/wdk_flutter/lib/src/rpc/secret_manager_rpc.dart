@@ -33,12 +33,14 @@ class SecretManagerRpc {
     required String saltHex,
     String? seedPhrase,
   }) async {
-    final Map<String, Object?> r =
-        await _rpc.call('commandGenerateAndEncrypt', <String, Object?>{
-      'passkey': passkey,
-      'salt': saltHex,
-      'seedPhrase': ?seedPhrase,
-    });
+    final Map<String, Object?> r = await _rpc.call(
+      'commandGenerateAndEncrypt',
+      <String, Object?>{
+        'passkey': passkey,
+        'salt': saltHex,
+        'seedPhrase': ?seedPhrase,
+      },
+    );
     return EncryptedSecret(
       encryptedEntropy: (r['encryptedEntropy'] ?? '').toString(),
       encryptedSeed: (r['encryptedSeed'] ?? '').toString(),
@@ -51,12 +53,14 @@ class SecretManagerRpc {
     required String saltHex,
     required String encryptedDataHex,
   }) async {
-    final Map<String, Object?> r =
-        await _rpc.call('commandDecrypt', <String, Object?>{
-      'passkey': passkey,
-      'salt': saltHex,
-      'encryptedData': encryptedDataHex,
-    });
+    final Map<String, Object?> r = await _rpc.call(
+      'commandDecrypt',
+      <String, Object?>{
+        'passkey': passkey,
+        'salt': saltHex,
+        'encryptedData': encryptedDataHex,
+      },
+    );
     return (r['result'] ?? '').toString();
   }
 

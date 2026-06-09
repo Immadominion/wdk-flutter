@@ -35,6 +35,22 @@ class CompactEncoder {
     _b.add(bytes);
   }
 
+  /// Fixed 4-byte little-endian uint (compact-encoding `uint32`), used by
+  /// bare-rpc for the leading frame length.
+  void uint32(int n) => _le(n, 4);
+
+  /// Boolean encoded as a single `uint` (0/1).
+  void boolean(bool b) => uint(b ? 1 : 0);
+
+  /// Length-prefixed byte buffer (`uint` length + raw bytes), i.e. `c.buffer`.
+  void buffer(Uint8List b) {
+    uint(b.length);
+    _b.add(b);
+  }
+
+  /// Signed zig-zag varint (compact-encoding `int`).
+  void intZigzag(int n) => uint(n < 0 ? (-n * 2 - 1) : n * 2);
+
   void _le(int n, int byteCount) {
     for (int i = 0; i < byteCount; i++) {
       _b.addByte((n >> (8 * i)) & 0xff);
@@ -65,6 +81,28 @@ class CompactDecoder {
     final String s = utf8.decode(_bytes.sublist(_offset, _offset + len));
     _offset += len;
     return s;
+  }
+
+  /// Fixed 4-byte little-endian uint.
+  int uint32() => _le(4);
+
+  /// Boolean (non-zero `uint`).
+  bool boolean() => uint() != 0;
+
+  /// Reads [n] raw bytes.
+  Uint8List bytes(int n) {
+    final Uint8List out = _bytes.sublist(_offset, _offset + n);
+    _offset += n;
+    return out;
+  }
+
+  /// Length-prefixed byte buffer (`c.buffer`).
+  Uint8List readBuffer() => bytes(uint());
+
+  /// Signed zig-zag varint (compact-encoding `int`).
+  int intZigzag() {
+    final int u = uint();
+    return (u & 1) != 0 ? -((u + 1) >> 1) : (u >> 1);
   }
 
   int _le(int byteCount) {

@@ -32,8 +32,8 @@ abstract class PricingClient {
 /// Bitfinex public-API client. Mirrors `BitfinexPricingClient`.
 class BitfinexPricingClient implements PricingClient {
   BitfinexPricingClient({http.Client? httpClient, Uri? baseUrl})
-      : _http = httpClient ?? http.Client(),
-        _baseUrl = baseUrl ?? Uri.parse('https://api-pub.bitfinex.com/v2');
+    : _http = httpClient ?? http.Client(),
+      _baseUrl = baseUrl ?? Uri.parse('https://api-pub.bitfinex.com/v2');
 
   final http.Client _http;
   final Uri _baseUrl;
@@ -76,10 +76,12 @@ class BitfinexPricingClient implements PricingClient {
   @override
   Future<List<double?>> getMultiCurrentPrices(List<PricePair> list) async {
     if (list.isEmpty) return const <double?>[];
-    final String symbols =
-        list.map((PricePair p) => tickerFor(p.from, p.to)).join(',');
-    final http.Response res =
-        await _http.get(_baseUrl.resolve('tickers?symbols=$symbols'));
+    final String symbols = list
+        .map((PricePair p) => tickerFor(p.from, p.to))
+        .join(',');
+    final http.Response res = await _http.get(
+      _baseUrl.resolve('tickers?symbols=$symbols'),
+    );
     if (res.statusCode != 200) {
       throw HttpPricingException('Bitfinex /tickers', res.statusCode, res.body);
     }
@@ -94,7 +96,9 @@ class BitfinexPricingClient implements PricingClient {
         }
       }
     }
-    return list.map((PricePair p) => bySymbol[tickerFor(p.from, p.to)]).toList();
+    return list
+        .map((PricePair p) => bySymbol[tickerFor(p.from, p.to)])
+        .toList();
   }
 }
 
@@ -154,8 +158,9 @@ class PricingProvider {
     bool forceRefresh = false,
   }) {
     return Future.wait(
-      list.map((PricePair p) =>
-          getLastPrice(p.from, p.to, forceRefresh: forceRefresh)),
+      list.map(
+        (PricePair p) => getLastPrice(p.from, p.to, forceRefresh: forceRefresh),
+      ),
     );
   }
 }

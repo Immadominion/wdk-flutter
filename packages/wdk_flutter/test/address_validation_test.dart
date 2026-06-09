@@ -13,7 +13,10 @@ void main() {
     test('rejects malformed EVM addresses', () {
       expect(AddressValidator.isValid(NetworkType.ethereum, '0x123'), isFalse);
       expect(
-        AddressValidator.isValid(NetworkType.ethereum, '52908400098527886E0F7030069857D2E4169EE7'),
+        AddressValidator.isValid(
+          NetworkType.ethereum,
+          '52908400098527886E0F7030069857D2E4169EE7',
+        ),
         isFalse,
       );
     });
@@ -40,25 +43,41 @@ void main() {
   group('TRON / Solana / TON format checks', () {
     test('TRON: 34 chars, T prefix, base58', () {
       expect(
-        AddressValidator.isValid(NetworkType.tron, 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE'),
+        AddressValidator.isValid(
+          NetworkType.tron,
+          'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+        ),
         isTrue,
       );
-      expect(AddressValidator.isValid(NetworkType.tron, 'XQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE'), isFalse);
+      expect(
+        AddressValidator.isValid(
+          NetworkType.tron,
+          'XQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE',
+        ),
+        isFalse,
+      );
     });
 
     test('Solana: base58, 32–44 chars', () {
       expect(
         AddressValidator.isValid(
-            NetworkType.solana, 'So11111111111111111111111111111111111111112'),
+          NetworkType.solana,
+          'So11111111111111111111111111111111111111112',
+        ),
         isTrue,
       );
-      expect(AddressValidator.isValid(NetworkType.solana, 'not-base58-0OIl'), isFalse);
+      expect(
+        AddressValidator.isValid(NetworkType.solana, 'not-base58-0OIl'),
+        isFalse,
+      );
     });
 
     test('TON: 48-char base64url', () {
       expect(
         AddressValidator.isValid(
-            NetworkType.ton, 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N'),
+          NetworkType.ton,
+          'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
+        ),
         isTrue,
       );
       expect(AddressValidator.isValid(NetworkType.ton, 'too-short'), isFalse);
@@ -68,7 +87,9 @@ void main() {
   test('validationError returns null when valid, a message when not', () {
     expect(
       AddressValidator.validationError(
-          NetworkType.ethereum, '0x52908400098527886E0F7030069857D2E4169EE7'),
+        NetworkType.ethereum,
+        '0x52908400098527886E0F7030069857D2E4169EE7',
+      ),
       isNull,
     );
     expect(

@@ -10,9 +10,13 @@ import 'package:wdk_flutter/wdk_flutter.dart';
 /// running the actual `@tetherto/wdk-react-native-provider` codecs over
 /// `compact-encoding` (the JS implementation is the oracle).
 void main() {
-  final List<dynamic> vectors = jsonDecode(
-    File('test/fixtures/secret_manager_vectors.json').readAsStringSync(),
-  ) as List<dynamic>;
+  final List<dynamic> vectors =
+      jsonDecode(
+            File(
+              'test/fixtures/secret_manager_vectors.json',
+            ).readAsStringSync(),
+          )
+          as List<dynamic>;
 
   test('loaded a non-trivial vector set', () {
     expect(vectors.length, greaterThanOrEqualTo(15));
@@ -37,11 +41,15 @@ void main() {
     test('every vector encodes byte-for-byte identically', () {
       for (final dynamic v in vectors) {
         final String name = v['enc'] as String;
-        final Map<String, Object?> value =
-            (v['value'] as Map<String, dynamic>).cast<String, Object?>();
+        final Map<String, Object?> value = (v['value'] as Map<String, dynamic>)
+            .cast<String, Object?>();
         final String expectedHex = v['hex'] as String;
         final Uint8List bytes = SecretManagerMessages.encode(name, value);
-        expect(_hex(bytes), expectedHex, reason: 'encode mismatch for $name $value');
+        expect(
+          _hex(bytes),
+          expectedHex,
+          reason: 'encode mismatch for $name $value',
+        );
       }
     });
 
@@ -50,8 +58,10 @@ void main() {
         final String name = v['enc'] as String;
         final Map<String, dynamic> expected =
             (v['decoded'] as Map<String, dynamic>);
-        final Map<String, Object?> decoded =
-            SecretManagerMessages.decode(name, _bytes(v['hex'] as String));
+        final Map<String, Object?> decoded = SecretManagerMessages.decode(
+          name,
+          _bytes(v['hex'] as String),
+        );
         expect(decoded, expected, reason: 'decode mismatch for $name');
       }
     });

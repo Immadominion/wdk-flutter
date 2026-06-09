@@ -39,8 +39,7 @@ class AddressValidator {
     return 'Invalid ${network.id} address';
   }
 
-  static bool _isEvm(String a) =>
-      RegExp(r'^0x[0-9a-fA-F]{40}$').hasMatch(a);
+  static bool _isEvm(String a) => RegExp(r'^0x[0-9a-fA-F]{40}$').hasMatch(a);
 
   static const String _b58 =
       '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';

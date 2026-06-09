@@ -10,8 +10,8 @@ command:
 
 scripts:
   analyze:
-    description: Run `dart analyze` in all packages.
-    exec: dart analyze
+    description: Run `dart analyze` in all packages (infos are fatal in CI).
+    exec: dart analyze --fatal-infos
   format:
     description: Verify formatting in all packages.
     exec: dart format --output=none --set-exit-if-changed .

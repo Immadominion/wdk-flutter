@@ -40,8 +40,7 @@ class InMemorySecretStorage implements SecretStorage {
   Future<String?> read(SecretKey key) async => _store[key.service];
 
   @override
-  Future<bool> contains(SecretKey key) async =>
-      _store.containsKey(key.service);
+  Future<bool> contains(SecretKey key) async => _store.containsKey(key.service);
 
   @override
   Future<void> delete(SecretKey key) async => _store.remove(key.service);
@@ -53,13 +52,14 @@ class InMemorySecretStorage implements SecretStorage {
 /// Production implementation backed by Keychain (iOS) / Keystore (Android).
 class FlutterSecureStorageSecretStorage implements SecretStorage {
   FlutterSecureStorageSecretStorage([FlutterSecureStorage? storage])
-      : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(encryptedSharedPreferences: true),
-              iOptions: IOSOptions(
-                accessibility: KeychainAccessibility.first_unlock_this_device,
-              ),
-            );
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(encryptedSharedPreferences: true),
+            iOptions: IOSOptions(
+              accessibility: KeychainAccessibility.first_unlock_this_device,
+            ),
+          );
 
   final FlutterSecureStorage _storage;
 
@@ -71,7 +71,8 @@ class FlutterSecureStorageSecretStorage implements SecretStorage {
   Future<String?> read(SecretKey key) => _storage.read(key: key.service);
 
   @override
-  Future<bool> contains(SecretKey key) => _storage.containsKey(key: key.service);
+  Future<bool> contains(SecretKey key) =>
+      _storage.containsKey(key: key.service);
 
   @override
   Future<void> delete(SecretKey key) => _storage.delete(key: key.service);

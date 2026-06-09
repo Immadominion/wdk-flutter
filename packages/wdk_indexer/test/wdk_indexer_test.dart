@@ -12,43 +12,49 @@ const IndexerConfig _config = IndexerConfig(
 
 void main() {
   group('batchTokenBalances', () {
-    test('hits /api/v1/batch/token-balances with x-api-key and maps results', () async {
-      final WdkIndexerClient client = WdkIndexerClient(
-        _config,
-        httpClient: MockClient((http.Request req) async {
-          expect(req.method, 'POST');
-          expect(req.url.path, '/api/v1/batch/token-balances');
-          expect(req.headers['x-api-key'], 'test-key');
-          expect(jsonDecode(req.body), <Object>[
-            <String, Object?>{
-              'blockchain': 'ethereum',
-              'token': 'usdt',
-              'address': '0xabc',
-            },
-          ]);
-          return http.Response(
-            jsonEncode(<String, Object?>{
-              '0': <String, Object?>{
-                'tokenBalance': <String, Object?>{
-                  'amount': '12.5',
-                  'blockchain': 'ethereum',
-                  'token': 'usdt',
-                },
+    test(
+      'hits /api/v1/batch/token-balances with x-api-key and maps results',
+      () async {
+        final WdkIndexerClient client = WdkIndexerClient(
+          _config,
+          httpClient: MockClient((http.Request req) async {
+            expect(req.method, 'POST');
+            expect(req.url.path, '/api/v1/batch/token-balances');
+            expect(req.headers['x-api-key'], 'test-key');
+            expect(jsonDecode(req.body), <Object>[
+              <String, Object?>{
+                'blockchain': 'ethereum',
+                'token': 'usdt',
+                'address': '0xabc',
               },
-            }),
-            200,
-          );
-        }),
-      );
+            ]);
+            return http.Response(
+              jsonEncode(<String, Object?>{
+                '0': <String, Object?>{
+                  'tokenBalance': <String, Object?>{
+                    'amount': '12.5',
+                    'blockchain': 'ethereum',
+                    'token': 'usdt',
+                  },
+                },
+              }),
+              200,
+            );
+          }),
+        );
 
-      final Map<String, TokenBalance> balances = await client.batchTokenBalances(
-        const <BalanceQuery>[
-          BalanceQuery(blockchain: 'ethereum', token: 'usdt', address: '0xabc'),
-        ],
-      );
-      expect(balances.containsKey('ethereum_usdt'), isTrue);
-      expect(balances['ethereum_usdt']!.amount, 12.5);
-    });
+        final Map<String, TokenBalance> balances = await client
+            .batchTokenBalances(const <BalanceQuery>[
+              BalanceQuery(
+                blockchain: 'ethereum',
+                token: 'usdt',
+                address: '0xabc',
+              ),
+            ]);
+        expect(balances.containsKey('ethereum_usdt'), isTrue);
+        expect(balances['ethereum_usdt']!.amount, 12.5);
+      },
+    );
 
     test('returns empty without an HTTP call for empty input', () async {
       bool called = false;
@@ -91,12 +97,10 @@ void main() {
         }),
       );
 
-      final Map<String, List<IndexerTransfer>> txs =
-          await client.batchTokenTransfers(
-        const <TransferQuery>[
-          TransferQuery(blockchain: 'bitcoin', token: 'btc', address: 'bc1q'),
-        ],
-      );
+      final Map<String, List<IndexerTransfer>> txs = await client
+          .batchTokenTransfers(const <TransferQuery>[
+            TransferQuery(blockchain: 'bitcoin', token: 'btc', address: 'bc1q'),
+          ]);
       expect(txs['bitcoin_btc']!.length, 1);
       expect(txs['bitcoin_btc']!.first.transactionHash, '0xhash');
       expect(txs['bitcoin_btc']!.first.amount, '100000');

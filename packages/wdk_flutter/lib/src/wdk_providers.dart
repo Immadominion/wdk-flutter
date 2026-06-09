@@ -12,8 +12,9 @@ final Provider<WdkConfig> wdkConfigProvider = Provider<WdkConfig>(
 );
 
 /// The process-wide [WdkService] facade.
-final Provider<WdkService> wdkServiceProvider =
-    Provider<WdkService>((Ref ref) => WdkService.instance);
+final Provider<WdkService> wdkServiceProvider = Provider<WdkService>(
+  (Ref ref) => WdkService.instance,
+);
 
 /// Snapshot of wallet state — the Flutter analog of the fields returned by the
 /// React Native `useWallet()` hook.
@@ -92,17 +93,21 @@ final NotifierProvider<WalletNotifier, WalletState> walletProvider =
 // Granular derived providers so widgets rebuild only on what they read,
 // mirroring the destructured fields of `useWallet()`.
 
-final Provider<WalletInfo?> walletInfoProvider =
-    Provider<WalletInfo?>((Ref ref) => ref.watch(walletProvider).wallet);
+final Provider<WalletInfo?> walletInfoProvider = Provider<WalletInfo?>(
+  (Ref ref) => ref.watch(walletProvider).wallet,
+);
 
-final Provider<bool> isInitializedProvider =
-    Provider<bool>((Ref ref) => ref.watch(walletProvider).isInitialized);
+final Provider<bool> isInitializedProvider = Provider<bool>(
+  (Ref ref) => ref.watch(walletProvider).isInitialized,
+);
 
-final Provider<bool> isUnlockedProvider =
-    Provider<bool>((Ref ref) => ref.watch(walletProvider).isUnlocked);
+final Provider<bool> isUnlockedProvider = Provider<bool>(
+  (Ref ref) => ref.watch(walletProvider).isUnlocked,
+);
 
-final Provider<bool> walletLoadingProvider =
-    Provider<bool>((Ref ref) => ref.watch(walletProvider).isLoading);
+final Provider<bool> walletLoadingProvider = Provider<bool>(
+  (Ref ref) => ref.watch(walletProvider).isLoading,
+);
 
 /// Current balances. M2: backed by an Indexer-fetching AsyncNotifier.
 final Provider<List<WalletBalance>> balancesProvider =
@@ -111,8 +116,8 @@ final Provider<List<WalletBalance>> balancesProvider =
 /// Receive addresses per network. M2: populated from the worklet.
 final Provider<Map<NetworkType, String>> addressesProvider =
     Provider<Map<NetworkType, String>>(
-  (Ref ref) => const <NetworkType, String>{},
-);
+      (Ref ref) => const <NetworkType, String>{},
+    );
 
 /// Transaction history. M2: backed by an Indexer-fetching AsyncNotifier.
 final Provider<List<TransactionRecord>> transactionsProvider =

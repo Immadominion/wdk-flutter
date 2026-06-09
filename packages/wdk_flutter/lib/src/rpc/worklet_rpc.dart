@@ -101,7 +101,8 @@ class JsonFrameWorkletRpc implements WorkletRpc {
     if (completer == null || completer.isCompleted) return;
 
     if (decoded.containsKey('error') && decoded['error'] != null) {
-      final WdkError err = WdkError.parse(decoded['error'].toString()) ??
+      final WdkError err =
+          WdkError.parse(decoded['error'].toString()) ??
           WdkError(code: 'rpc', message: decoded['error'].toString());
       completer.completeError(err);
       return;

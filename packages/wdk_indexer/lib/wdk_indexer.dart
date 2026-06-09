@@ -38,10 +38,10 @@ class BalanceQuery {
   final String address;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'blockchain': blockchain,
-        'token': token,
-        'address': address,
-      };
+    'blockchain': blockchain,
+    'token': token,
+    'address': address,
+  };
 }
 
 /// A transfer-history lookup. [limit] defaults to 100, matching upstream.
@@ -63,13 +63,13 @@ class TransferQuery {
   final int? toTs;
 
   Map<String, Object?> toJson() => <String, Object?>{
-        'blockchain': blockchain,
-        'token': token,
-        'address': address,
-        'limit': limit,
-        if (fromTs != null) 'fromTs': fromTs,
-        if (toTs != null) 'toTs': toTs,
-      };
+    'blockchain': blockchain,
+    'token': token,
+    'address': address,
+    'limit': limit,
+    if (fromTs != null) 'fromTs': fromTs,
+    if (toTs != null) 'toTs': toTs,
+  };
 }
 
 /// A token balance returned by the indexer.
@@ -85,10 +85,10 @@ class TokenBalance {
   final String token;
 
   factory TokenBalance.fromJson(Map<String, Object?> json) => TokenBalance(
-        amount: _toDouble(json['amount']),
-        blockchain: (json['blockchain'] ?? '').toString(),
-        token: (json['token'] ?? '').toString(),
-      );
+    amount: _toDouble(json['amount']),
+    blockchain: (json['blockchain'] ?? '').toString(),
+    token: (json['token'] ?? '').toString(),
+  );
 }
 
 /// A token transfer returned by the indexer.
@@ -139,7 +139,7 @@ class IndexerException implements Exception {
 /// Client for the WDK Indexer API.
 class WdkIndexerClient {
   WdkIndexerClient(this.config, {http.Client? httpClient})
-      : _http = httpClient ?? http.Client();
+    : _http = httpClient ?? http.Client();
 
   final IndexerConfig config;
   final http.Client _http;
@@ -148,10 +148,10 @@ class WdkIndexerClient {
       Uri.parse('${config.url}/api/${config.version}/$path');
 
   Map<String, String> get _headers => <String, String>{
-        'accept': 'application/json',
-        'content-type': 'application/json',
-        'x-api-key': config.apiKey,
-      };
+    'accept': 'application/json',
+    'content-type': 'application/json',
+    'x-api-key': config.apiKey,
+  };
 
   /// Batch token balances. Returns a map keyed by `"{blockchain}_{token}"`,
   /// matching the key scheme used by the provider's balance map.

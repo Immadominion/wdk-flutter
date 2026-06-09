@@ -1,0 +1,58 @@
+[
+  {
+    "kind": "request",
+    "method": "commandWorkletStart",
+    "command": 0,
+    "id": 1,
+    "bodyHex": "00",
+    "frameHex": "06000000010100000100"
+  },
+  {
+    "kind": "request",
+    "method": "commandWorkletStart",
+    "command": 0,
+    "id": 2,
+    "bodyHex": "0101",
+    "frameHex": "0700000001020000020101"
+  },
+  {
+    "kind": "request",
+    "method": "commandGenerateAndEncrypt",
+    "command": 2,
+    "id": 3,
+    "bodyHex": "0302706b0461626364",
+    "frameHex": "0e00000001030200090302706b0461626364"
+  },
+  {
+    "kind": "request",
+    "method": "commandDecrypt",
+    "command": 3,
+    "id": 7,
+    "bodyHex": "07017001730430306666",
+    "frameHex": "0f000000010703000a07017001730430306666"
+  },
+  {
+    "kind": "request",
+    "method": "commandWorkletStop",
+    "command": 1,
+    "id": 9,
+    "bodyHex": "00",
+    "frameHex": "06000000010901000100"
+  },
+  {
+    "kind": "response",
+    "id": 1,
+    "bodyHex": "010773746172746564",
+    "frameHex": "0e0000000201000009010773746172746564"
+  },
+  {
+    "kind": "error",
+    "id": 2,
+    "error": {
+      "message": "code:13,msg:cancelled",
+      "code": "13",
+      "errno": 0
+    },
+    "frameHex": "1e0000000202010015636f64653a31332c6d73673a63616e63656c6c656402313300"
+  }
+]

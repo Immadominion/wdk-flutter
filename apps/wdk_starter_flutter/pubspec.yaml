@@ -29,3 +29,7 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    # The WDK worklet bundle(s) you drop in during native bring-up (Part B).
+    # See assets/bundles/README.md for the exact files + pinned versions.
+    - assets/bundles/

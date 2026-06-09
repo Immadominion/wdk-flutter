@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 /// Method channel shared by all worklets.
-const MethodChannel _methods =
-    MethodChannel('dev.web3flutter.flutter_bare_kit/methods');
+const MethodChannel _methods = MethodChannel(
+  'dev.web3flutter.flutter_bare_kit/methods',
+);
 
 /// A handle to a single Bare worklet (an isolated Bare thread) and the IPC
 /// pipe used to talk to it.
@@ -33,16 +34,18 @@ class Worklet {
     List<String> args = const <String>[],
     int? memoryLimitBytes,
   }) async {
-    assert(bundle != null || source != null,
-        'Provide either a bundle or source');
+    assert(
+      bundle != null || source != null,
+      'Provide either a bundle or source',
+    );
     final Object? raw = await _methods
         .invokeMethod<Object?>('startWorklet', <String, Object?>{
-      'filename': filename,
-      'source': ?source,
-      'bundle': ?bundle,
-      'args': args,
-      'memoryLimit': ?memoryLimitBytes,
-    });
+          'filename': filename,
+          'source': ?source,
+          'bundle': ?bundle,
+          'args': args,
+          'memoryLimit': ?memoryLimitBytes,
+        });
     final int id = (raw as num).toInt();
     return Worklet._(id, BareIPC._(id));
   }
@@ -64,22 +67,21 @@ class Worklet {
 /// caller's responsibility (the WDK provider layers HRPC on top).
 class BareIPC {
   BareIPC._(this._id)
-      : _events =
-            EventChannel('dev.web3flutter.flutter_bare_kit/ipc/$_id');
+    : _events = EventChannel('dev.web3flutter.flutter_bare_kit/ipc/$_id');
 
   final int _id;
   final EventChannel _events;
 
   /// Inbound frames from the worklet.
-  Stream<Uint8List> get stream => _events
-      .receiveBroadcastStream()
-      .map((Object? e) => e is Uint8List ? e : Uint8List.fromList(<int>[]));
+  Stream<Uint8List> get stream => _events.receiveBroadcastStream().map(
+    (Object? e) => e is Uint8List ? e : Uint8List.fromList(<int>[]),
+  );
 
   /// Writes an outbound frame to the worklet.
   Future<void> write(Uint8List data) => _methods.invokeMethod<void>(
-        'ipcWrite',
-        <String, Object?>{'id': _id, 'data': data},
-      );
+    'ipcWrite',
+    <String, Object?>{'id': _id, 'data': data},
+  );
 
   /// Closes the host side of the pipe.
   Future<void> end() =>

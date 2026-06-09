@@ -87,8 +87,10 @@ ThemeData buildWdkThemeData({
   required Color primaryColor,
   required Brightness brightness,
 }) {
-  final WdkTheme ext =
-      WdkTheme.fromBrand(primaryColor: primaryColor, brightness: brightness);
+  final WdkTheme ext = WdkTheme.fromBrand(
+    primaryColor: primaryColor,
+    brightness: brightness,
+  );
   return ThemeData(
     useMaterial3: true,
     brightness: brightness,

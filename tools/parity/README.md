@@ -11,9 +11,11 @@ them.
 
 ```bash
 cd tools/parity
-npm init -y && npm install hyperschema compact-encoding b4a
-node oracle.mjs        # writes secret_manager_vectors.json
-cp secret_manager_vectors.json ../../packages/wdk_flutter/test/fixtures/
+npm init -y && npm install hyperschema compact-encoding b4a hrpc
+node oracle.mjs          # message bodies  -> secret_manager_vectors.json
+node oracle-frames.mjs   # full bare-rpc frames -> hrpc_frame_vectors.json
+cp secret_manager_vectors.json hrpc_frame_vectors.json \
+   ../../packages/wdk_flutter/test/fixtures/
 ```
 
 `sm-messages.js` is the codec source copied verbatim from the published
@@ -23,10 +25,13 @@ provider (`lib/module/spec/hrpc/messages.js`).
 
 - ✅ **secret-manager message codecs** — `compact-encoding` + all 5 messages
   (workletStart/Stop, generateAndEncrypt, decrypt, log), verified byte-exact.
-- ⛔ **HRPC request/response envelope** — the framing the `hrpc/runtime` `RPC`
-  class writes around each body (command id + request id + reply correlation).
-  Capture full-frame vectors by driving the real `hrpc` over an in-memory
-  duplex, then match in Dart.
+- ✅ **HRPC request/response envelope** — `bare-rpc` framing
+  (`[uint32 frameLen][uint type][uint id][...][uint dataLen][data]`, errors as
+  `utf8 message + utf8 code + int errno`). Ported in `hrpc_worklet_rpc.dart` and
+  verified byte-exact against the real `bare-rpc` encoder via `oracle-frames.mjs`
+  → `hrpc_frame_vectors.json` (requests, success response, error), plus a
+  loopback request/response round-trip. The **secret-manager** worklet now
+  speaks real HRPC end-to-end in `WdkWorkletBinding`.
 - ⚠️ **manager (`@wdk-core`) methods — version-sensitive.** The provider
   (`beta.3`) calls named methods (`getAddress`, `sendTransaction`, …) while the
   packed `pear-wrk-wdk@beta.8` HRPC schema exposes a generic

@@ -12,7 +12,8 @@ class MockFlutterBareKitPlatform
 }
 
 void main() {
-  final FlutterBareKitPlatform initialPlatform = FlutterBareKitPlatform.instance;
+  final FlutterBareKitPlatform initialPlatform =
+      FlutterBareKitPlatform.instance;
 
   test('$MethodChannelFlutterBareKit is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelFlutterBareKit>());
