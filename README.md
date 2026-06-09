@@ -11,7 +11,7 @@
 > "Template Wallet" bounty. The architecture, packages, app shell, theming, and
 > the full screen map are in place and pass CI; the WDK worklet binding and live
 > wallet flows are implemented across milestones M2–M3. **Do not use with real
-> funds.** See [ROADMAP.md](../ROADMAP.md).
+> funds.** See [ROADMAP.md](ROADMAP.md).
 
 ## What this is
 
@@ -21,20 +21,48 @@ thread. This project brings that to Flutter **without modifying WDK core**, by
 adding the one piece Flutter is missing — a Bare binding — and reproducing the
 React Native provider + UI + starter on top of it.
 
-```
-apps/wdk_starter_flutter   →  the template app (go_router, screens, theming)
-        │
-packages/wdk_ui            →  themeable widgets (WdkTheme, Balance, …)
-packages/wdk_flutter       →  Riverpod provider: WdkService + useWallet() analog
-        │
-packages/flutter_bare_kit  →  embeds the Bare runtime; runs the WDK worklet
-        │
-@tetherto/pear-wrk-wdk     →  Tether's UNMODIFIED WDK core (all chains)
+### Layered architecture
+
+```mermaid
+graph TD
+    A["<b>apps/wdk_starter_flutter</b><br/>go_router · screens · UX, history, monitoring"]
+    B["<b>packages/wdk_ui</b><br/>WdkTheme · Balance · TransactionList · …"]
+    C["<b>packages/wdk_flutter</b><br/>WdkService facade · useWallet() Riverpod analog · RPC client"]
+    D["<b>packages/flutter_bare_kit</b><br/>embeds the Bare runtime · IPC pipe"]
+    E["<b>@tetherto/pear-wrk-wdk</b> (UNMODIFIED)<br/>WDK worklet — seed/key custody · signing · multi-chain"]
+    F["Bitcoin · Lightning/Spark · Ethereum · Polygon<br/>Arbitrum · Plasma · Solana&nbsp;&nbsp;|&nbsp;&nbsp;BTC · USD₮ · XAU₮"]
+
+    A --> B
+    A --> C
+    C --> D
+    D --> E
+    E --> F
+
+    style E fill:#1BA27A,stroke:#0d6e52,color:#fff
+    style F fill:#16161c,stroke:#2a2a33,color:#fff
 ```
 
 Because the real worklet is reused, every chain WDK supports — Bitcoin,
 Lightning (Spark), Ethereum, Polygon, Arbitrum, Plasma, Solana — and every asset
 — BTC, USD₮, XAU₮ — comes from upstream, not a reimplementation.
+
+### Send flow (keys never leave the worklet)
+
+```mermaid
+sequenceDiagram
+    participant UI as App (UI isolate)
+    participant P as wdk_flutter (WdkService)
+    participant K as flutter_bare_kit (IPC)
+    participant W as WDK worklet (Bare)
+
+    UI->>P: sendByNetwork(network, amount, recipient, asset)
+    P->>K: write RPC request frame
+    K->>W: IPC
+    Note over W: build + sign tx/UserOp<br/>(private keys stay inside the worklet)
+    W-->>K: { hash, fee }
+    K-->>P: response frame
+    P-->>UI: SendResult
+```
 
 ## Repository layout
 
@@ -86,7 +114,7 @@ React Native starter. Swap the public RPC URLs for keyed endpoints in production
 This is **Phase 0 (bootstrap)**. Next: the `flutter_bare_kit` native build and
 the worklet RPC integration (M2), then full multi-chain flows + docs + demo
 video (M3). The detailed plan, milestones, and risk register are in
-[ROADMAP.md](../ROADMAP.md).
+[ROADMAP.md](ROADMAP.md).
 
 ## License
 

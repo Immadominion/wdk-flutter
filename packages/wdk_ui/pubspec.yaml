@@ -6,7 +6,7 @@ description: >-
   AssetSelector, NetworkSelector, AddressInput, AmountInput, QrCode, SeedPhrase).
 version: 0.0.1
 publish_to: none
-repository: https://github.com/Immadominion/wdk-starter-flutter
+repository: https://github.com/Immadominion/wdk-flutter
 
 environment:
   sdk: ^3.11.0
