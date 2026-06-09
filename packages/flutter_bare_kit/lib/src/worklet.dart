@@ -1,70 +1,87 @@
 import 'dart:async';
-import 'dart:typed_data';
+
+import 'package:flutter/services.dart';
+
+/// Method channel shared by all worklets.
+const MethodChannel _methods =
+    MethodChannel('dev.web3flutter.flutter_bare_kit/methods');
 
 /// A handle to a single Bare worklet (an isolated Bare thread) and the IPC
 /// pipe used to talk to it.
 ///
-/// Mirrors `react-native-bare-kit`'s `Worklet`/`IPC` surface so that the
-/// message protocol used by the WDK provider ports across unchanged:
-///
-/// 1. [start] boots the worklet from a bundled `.bundle.js` (e.g. Tether's
-///    `wdk-worklet.mobile.bundle.js`, loaded as a Flutter asset).
-/// 2. The host writes request frames via [BareIPC.write] and reads response
-///    frames from [BareIPC.stream]. A higher-level RPC (bare-rpc style) is
-///    layered on top in the `wdk_flutter` provider.
-///
-/// IMPLEMENTATION STATUS: API stub. The native layer (Android CMake/NDK build
-/// of `bare-kit`, iOS podspec building the `apple/` sources, bridged to Dart
-/// via platform channels or FFI) is the keystone task of milestone M2.
+/// Mirrors `react-native-bare-kit`'s `Worklet`/`IPC` surface. The Dart side is
+/// a thin platform-channel bridge; the native side (Android/iOS) embeds the
+/// Bare runtime via Holepunch's `bare-kit` and forwards bytes over the IPC
+/// pipe. See `NATIVE_INTEGRATION.md`.
 class Worklet {
-  /// Wraps an [ipc] pipe to an already-started worklet. Prefer [start].
-  Worklet(this.ipc);
+  Worklet._(this.id, this.ipc);
+
+  /// Native handle id for this worklet instance.
+  final int id;
 
   /// The bidirectional pipe to the worklet.
   final BareIPC ipc;
 
-  /// Starts a worklet.
+  /// Starts a worklet from a Bare [bundle] (`bare-pack` output) or raw [source].
   ///
-  /// [filename] is the logical entry name reported to the worklet; [bundle] is
-  /// the bytes of a Bare bundle (`bare-pack` output). [source] may be provided
-  /// instead of [bundle] to run raw JS. [args] are passed to the worklet.
+  /// [filename] is the logical entry name reported to the worklet. Returns once
+  /// the native side has created the worklet and its IPC pipe.
   static Future<Worklet> start(
     String filename, {
     Uint8List? bundle,
     String? source,
     List<String> args = const <String>[],
     int? memoryLimitBytes,
-  }) {
-    throw UnimplementedError(
-      'flutter_bare_kit native layer not yet implemented (milestone M2). '
-      'See ROADMAP.md §3.1.',
-    );
+  }) async {
+    assert(bundle != null || source != null,
+        'Provide either a bundle or source');
+    final Object? raw = await _methods
+        .invokeMethod<Object?>('startWorklet', <String, Object?>{
+      'filename': filename,
+      'source': ?source,
+      'bundle': ?bundle,
+      'args': args,
+      'memoryLimit': ?memoryLimitBytes,
+    });
+    final int id = (raw as num).toInt();
+    return Worklet._(id, BareIPC._(id));
   }
 
-  /// Suspends the worklet's event loop (e.g. when the app backgrounds).
-  Future<void> suspend() => throw UnimplementedError();
+  Future<void> suspend() =>
+      _methods.invokeMethod<void>('suspend', <String, Object?>{'id': id});
 
-  /// Resumes a suspended worklet.
-  Future<void> resume() => throw UnimplementedError();
+  Future<void> resume() =>
+      _methods.invokeMethod<void>('resume', <String, Object?>{'id': id});
 
-  /// Terminates the worklet and releases native resources.
-  Future<void> terminate() => throw UnimplementedError();
+  Future<void> terminate() =>
+      _methods.invokeMethod<void>('terminate', <String, Object?>{'id': id});
 }
 
 /// The IPC duplex between the Flutter host and a [Worklet].
 ///
-/// Non-blocking in both directions, matching Bare's IPC semantics. Frames are
-/// raw bytes; framing/serialization is the caller's responsibility (the WDK
-/// provider uses the same framing as the React Native provider).
+/// Inbound frames arrive on an [EventChannel] keyed by the worklet id; outbound
+/// frames are written via the method channel. Framing/serialization is the
+/// caller's responsibility (the WDK provider layers HRPC on top).
 class BareIPC {
+  BareIPC._(this._id)
+      : _events =
+            EventChannel('dev.web3flutter.flutter_bare_kit/ipc/$_id');
+
+  final int _id;
+  final EventChannel _events;
+
   /// Inbound frames from the worklet.
-  Stream<Uint8List> get stream =>
-      throw UnimplementedError('flutter_bare_kit native layer pending (M2).');
+  Stream<Uint8List> get stream => _events
+      .receiveBroadcastStream()
+      .map((Object? e) => e is Uint8List ? e : Uint8List.fromList(<int>[]));
 
   /// Writes an outbound frame to the worklet.
-  Future<void> write(Uint8List data) =>
-      throw UnimplementedError('flutter_bare_kit native layer pending (M2).');
+  Future<void> write(Uint8List data) => _methods.invokeMethod<void>(
+        'ipcWrite',
+        <String, Object?>{'id': _id, 'data': data},
+      );
 
   /// Closes the host side of the pipe.
-  Future<void> end() => throw UnimplementedError();
+  Future<void> end() =>
+      _methods.invokeMethod<void>('ipcEnd', <String, Object?>{'id': _id});
 }
