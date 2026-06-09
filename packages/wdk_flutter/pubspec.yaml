@@ -18,8 +18,14 @@ dependencies:
   flutter_riverpod: ^2.6.1
   flutter_bare_kit:
     path: ../flutter_bare_kit
+  wdk_indexer:
+    path: ../wdk_indexer
+  wdk_pricing:
+    path: ../wdk_pricing
   flutter_secure_storage: ^9.2.4
   local_auth: ^2.3.0
+  bip39: ^1.0.6
+  convert: ^3.1.1
   http: ^1.2.2
   meta: ^1.15.0
 

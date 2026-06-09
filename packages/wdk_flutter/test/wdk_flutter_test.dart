@@ -26,12 +26,57 @@ void main() {
     });
   });
 
-  group('WdkService.getDenominationValue', () {
-    test('BTC has 8 decimals; USDT/XAUT have 6', () {
-      final WdkService svc = WdkService.instance;
-      expect(svc.getDenominationValue(AssetTicker.btc), 8);
-      expect(svc.getDenominationValue(AssetTicker.usdt), 6);
-      expect(svc.getDenominationValue(AssetTicker.xaut), 6);
+  group('denominations (matching the RN provider)', () {
+    test('denominationFor: BTC=1e8, USDT/XAUT=1e6', () {
+      expect(denominationFor(AssetTicker.btc), BigInt.from(100000000));
+      expect(denominationFor(AssetTicker.usdt), BigInt.from(1000000));
+      expect(denominationFor(AssetTicker.xaut), BigInt.from(1000000));
+    });
+
+    test('decimalsFor: BTC=8, USDT/XAUT=6', () {
+      expect(decimalsFor(AssetTicker.btc), 8);
+      expect(decimalsFor(AssetTicker.usdt), 6);
+      expect(decimalsFor(AssetTicker.xaut), 6);
+    });
+
+    test('WdkService.getDenominationValue returns the multiplier', () {
+      expect(WdkService.instance.getDenominationValue(AssetTicker.btc), 100000000);
+      expect(WdkService.instance.getDenominationValue(AssetTicker.usdt), 1000000);
+    });
+  });
+
+  group('asset → network map matches the provider', () {
+    test('BTC=SegWit only; XAUT=Ethereum only; USDT spans EVM+TON', () {
+      expect(assetNetworks[AssetTicker.btc], <NetworkType>[NetworkType.segwit]);
+      expect(assetNetworks[AssetTicker.xaut], <NetworkType>[NetworkType.ethereum]);
+      expect(assetNetworks[AssetTicker.usdt], contains(NetworkType.ton));
+    });
+
+    test('USDT/XAUT contract addresses are present for Ethereum', () {
+      expect(
+        smartContractAddresses[AssetTicker.usdt]?[NetworkType.ethereum],
+        '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      );
+      expect(
+        smartContractAddresses[AssetTicker.xaut]?[NetworkType.ethereum],
+        isNotNull,
+      );
+    });
+  });
+
+  group('encryption salt (port of wdk-encryption-salt.ts)', () {
+    test('is 16 bytes and pads short input with 7', () {
+      final List<int> salt = generateWdkSalt('ab'); // 2 bytes -> pad 14 x 7
+      expect(salt.length, 16);
+      expect(salt[0], 'a'.codeUnitAt(0));
+      expect(salt[1], 'b'.codeUnitAt(0));
+      expect(salt.sublist(2).every((int b) => b == 7), isTrue);
+    });
+
+    test('takes the local part before @', () {
+      final List<int> a = generateWdkSalt('device-id-123');
+      final List<int> b = generateWdkSalt('device-id-123@ignored');
+      expect(a, b);
     });
   });
 

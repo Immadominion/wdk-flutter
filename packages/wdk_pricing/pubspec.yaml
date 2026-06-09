@@ -1,0 +1,21 @@
+name: wdk_pricing
+description: >-
+  Dart port of @tetherto/wdk-pricing-provider + @tetherto/wdk-pricing-bitfinex-http.
+  A cache-aware pricing provider with a Bitfinex public-API client for converting
+  asset amounts (BTC, XAU₮) to fiat. Library code is pure Dart (no Flutter import).
+version: 0.0.1
+publish_to: none
+repository: https://github.com/Immadominion/wdk-flutter
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+dependencies:
+  http: ^1.2.2
+  meta: ^1.15.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

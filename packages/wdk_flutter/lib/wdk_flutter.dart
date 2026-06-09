@@ -10,6 +10,12 @@
 ///     [transactionsProvider], and the granular state providers).
 library;
 
+export 'src/rpc/secret_manager_rpc.dart';
+export 'src/rpc/wdk_manager_rpc.dart';
+export 'src/rpc/worklet_rpc.dart';
+export 'src/secret/secret_storage.dart';
+export 'src/secret/wdk_encryption_salt.dart';
+export 'src/wdk_constants.dart';
 export 'src/wdk_core.dart';
 export 'src/wdk_providers.dart';
 export 'src/wdk_service.dart';

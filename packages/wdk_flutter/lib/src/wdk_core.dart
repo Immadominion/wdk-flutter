@@ -1,7 +1,10 @@
 import 'package:meta/meta.dart';
+import 'package:wdk_indexer/wdk_indexer.dart' show IndexerConfig;
+
+export 'package:wdk_indexer/wdk_indexer.dart' show IndexerConfig;
 
 /// Blockchain networks WDK exposes. Mirrors the React Native provider's
-/// `NetworkType`, plus `plasma` (in scope per the Template Wallet bounty).
+/// `NetworkType`, plus `plasma` (named in the Template Wallet bounty).
 enum NetworkType {
   ethereum('ethereum'),
   polygon('polygon'),
@@ -77,13 +80,14 @@ class WdkError implements Exception {
   String toString() => 'WdkError(code: $code, message: $message)';
 }
 
-/// Connection settings for the WDK Indexer HTTP API.
-@immutable
-class IndexerConfig {
-  const IndexerConfig({required this.apiKey, required this.url});
-
-  final String apiKey;
-  final String url;
+/// Thrown when a wallet operation needs the worklet but the native
+/// `flutter_bare_kit` binding is not yet wired (milestone M2).
+class WorkletUnavailable implements Exception {
+  const WorkletUnavailable([this.detail = '']);
+  final String detail;
+  @override
+  String toString() =>
+      'WorkletUnavailable: the WDK worklet binding is not wired yet (M2). $detail';
 }
 
 /// Top-level WDK configuration, supplied at app root. Mirrors the RN
@@ -118,47 +122,47 @@ class WalletInfo {
   final List<AssetTicker> enabledAssets;
 }
 
-/// A single balance entry for an asset on a network.
+/// A balance for an asset on a network, in whole token units.
 @immutable
 class WalletBalance {
   const WalletBalance({
-    required this.networkType,
-    required this.denomination,
-    required this.value,
+    required this.asset,
+    required this.network,
+    required this.amount,
   });
 
-  final NetworkType networkType;
-  final String denomination;
-  final BigInt value;
+  final AssetTicker asset;
+  final NetworkType network;
+  final double amount;
 }
 
-/// A transaction as reported by the Indexer.
+/// A transaction as reported by the Indexer (amount is the raw on-chain value).
 @immutable
 class TransactionRecord {
   const TransactionRecord({
     required this.transactionHash,
-    required this.blockchain,
+    required this.network,
+    required this.asset,
     required this.amount,
-    required this.token,
     required this.timestamp,
     this.from,
     this.to,
   });
 
   final String transactionHash;
-  final NetworkType blockchain;
-  final BigInt amount;
-  final AssetTicker token;
+  final NetworkType network;
+  final AssetTicker asset;
+  final String amount;
   final DateTime timestamp;
   final String? from;
   final String? to;
 }
 
-/// Result of a successful send: the broadcast hash and the fee paid.
+/// Result of a successful send: the broadcast hash and (when available) fee.
 @immutable
 class SendResult {
-  const SendResult({required this.hash, required this.fee});
+  const SendResult({required this.hash, this.fee});
 
   final String hash;
-  final BigInt fee;
+  final String? fee;
 }

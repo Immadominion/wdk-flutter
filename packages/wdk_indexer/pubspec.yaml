@@ -1,0 +1,21 @@
+name: wdk_indexer
+description: >-
+  Typed Dart client for the WDK Indexer HTTP API (batch token balances and
+  token transfers). Mirrors the requests the @tetherto/wdk-react-native-provider
+  makes. Library code is pure Dart (no Flutter import).
+version: 0.0.1
+publish_to: none
+repository: https://github.com/Immadominion/wdk-flutter
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+dependencies:
+  http: ^1.2.2
+  meta: ^1.15.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
