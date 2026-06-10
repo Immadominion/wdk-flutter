@@ -1,0 +1,20 @@
+{
+  "name": "parity",
+  "version": "1.0.0",
+  "description": "WDK's worklet RPC is **HRPC** over **`compact-encoding`** (binary). To guarantee the Dart codec matches Tether's exactly, we treat the real JS encoder as the **oracle**: `oracle.mjs` runs the actual `@tetherto/wdk-react-native-provider` secret-manager codecs and emits byte-exact vectors; the Dart test (`packages/wdk_flutter/test/hrpc_parity_test.dart`) asserts our port reproduces them.",
+  "main": "sm-messages.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "b4a": "^1.8.1",
+    "bare-rpc": "^1.3.3",
+    "compact-encoding": "^3.2.0",
+    "hrpc": "^4.3.0",
+    "hyperschema": "^1.21.0"
+  }
+}

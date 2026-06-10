@@ -1,0 +1,59 @@
+[
+  {
+    "kind": "request",
+    "method": "workletStart",
+    "command": 1,
+    "id": 1,
+    "bodyHex": "020f6162616e646f6e206162696c697479027b7d",
+    "frameHex": "190000000101010014020f6162616e646f6e206162696c697479027b7d"
+  },
+  {
+    "kind": "request",
+    "method": "getAddress",
+    "command": 2,
+    "id": 2,
+    "bodyHex": "07626974636f696e00",
+    "frameHex": "0e000000010202000907626974636f696e00"
+  },
+  {
+    "kind": "request",
+    "method": "sendTransaction",
+    "command": 5,
+    "id": 3,
+    "bodyHex": "07626974636f696e000a04626331710435303030",
+    "frameHex": "19000000010305001407626974636f696e000a04626331710435303030"
+  },
+  {
+    "kind": "request",
+    "method": "abstractedAccountTransfer",
+    "command": 9,
+    "id": 4,
+    "bodyHex": "08657468657265756d0010033078540330785207313030303030300106010403307850",
+    "frameHex": "28000000010409002308657468657265756d0010033078540330785207313030303030300106010403307850"
+  },
+  {
+    "kind": "request",
+    "method": "dispose",
+    "command": 14,
+    "id": 5,
+    "bodyHex": "",
+    "frameHex": "0500000001050e0000"
+  },
+  {
+    "kind": "response",
+    "method": "getAddress",
+    "id": 2,
+    "bodyHex": "01076263317178797a",
+    "frameHex": "0e000000020200000901076263317178797a"
+  },
+  {
+    "kind": "error",
+    "id": 3,
+    "error": {
+      "message": "code:5,msg:Insufficient balance",
+      "code": "5",
+      "errno": 0
+    },
+    "frameHex": "27000000020301001f636f64653a352c6d73673a496e73756666696369656e742062616c616e6365013500"
+  }
+]

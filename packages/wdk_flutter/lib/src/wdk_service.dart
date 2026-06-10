@@ -180,7 +180,7 @@ class WdkService {
 
   Future<void> clearWallet() async {
     try {
-      await _manager?.workletStop();
+      await _manager?.dispose();
     } catch (_) {
       /* worklet may not be running */
     }

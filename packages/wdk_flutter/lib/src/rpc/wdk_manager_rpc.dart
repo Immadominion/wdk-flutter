@@ -22,8 +22,9 @@ class WdkManagerRpc {
     });
   }
 
-  Future<void> workletStop() async {
-    await _rpc.call('workletStop', <String, Object?>{});
+  /// Tears down the manager worklet (HRPC `dispose`, command 14, send-only).
+  Future<void> dispose() async {
+    await _rpc.call('dispose', <String, Object?>{});
   }
 
   /// Direct (non-abstracted) address — used for Bitcoin/SegWit.

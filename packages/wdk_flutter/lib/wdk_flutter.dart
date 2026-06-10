@@ -16,6 +16,7 @@ export 'src/rpc/compact_encoding.dart';
 export 'src/rpc/hrpc_secret_messages.dart';
 export 'src/rpc/hrpc_worklet_rpc.dart';
 export 'src/rpc/secret_manager_rpc.dart';
+export 'src/rpc/wdk_manager_messages.dart';
 export 'src/rpc/wdk_manager_rpc.dart';
 export 'src/rpc/worklet_rpc.dart';
 export 'src/secret/secret_storage.dart';

@@ -48,6 +48,16 @@ class CompactEncoder {
     _b.add(b);
   }
 
+  /// `c.frame(enc)`: a length-prefixed sub-message. [build] writes the inner
+  /// message into a fresh encoder; we then emit `uint(innerLen) + innerBytes`.
+  /// WDK's manager schema wraps every nested object (`options`, `config`,
+  /// `paymasterToken`) in a frame.
+  void frame(void Function(CompactEncoder inner) build) {
+    final CompactEncoder inner = CompactEncoder();
+    build(inner);
+    buffer(inner.takeBytes());
+  }
+
   /// Signed zig-zag varint (compact-encoding `int`).
   void intZigzag(int n) => uint(n < 0 ? (-n * 2 - 1) : n * 2);
 
@@ -98,6 +108,11 @@ class CompactDecoder {
 
   /// Length-prefixed byte buffer (`c.buffer`).
   Uint8List readBuffer() => bytes(uint());
+
+  /// `c.frame` reader: reads the length-prefixed sub-message and hands a
+  /// decoder positioned over exactly those bytes to [read].
+  T readFrame<T>(T Function(CompactDecoder inner) read) =>
+      read(CompactDecoder(readBuffer()));
 
   /// Signed zig-zag varint (compact-encoding `int`).
   int intZigzag() {

@@ -2,14 +2,15 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 
-/// Asset key for the WDK **manager** worklet bundle (the name referenced by the
-/// RN starter's `types/wdk-bare.d.ts`). Update if your pinned package differs.
+/// Asset key for the WDK **manager** worklet bundle. This is the prebuilt
+/// mobile bundle shipped in `@tetherto/wdk-react-native-provider@beta.3` at
+/// `lib/module/services/wdk-service/wdk-worklet.mobile.bundle.js`.
 const String kWdkManagerBundleAsset =
     'assets/bundles/wdk-worklet.mobile.bundle.js';
 
-/// Asset key for the **secret-manager** worklet bundle.
-/// ⚠️ Confirm on-device — the filename/source is version-sensitive
-/// (see `assets/bundles/README.md`).
+/// Asset key for the **secret-manager** worklet bundle, shipped alongside the
+/// manager bundle in the same provider directory
+/// (`wdk-secret-manager-worklet.bundle.js`).
 const String kWdkSecretBundleAsset =
     'assets/bundles/wdk-secret-manager-worklet.bundle.js';
 
@@ -32,8 +33,9 @@ Future<Uint8List> _load(String key) async {
   } on Object catch (e) {
     throw StateError(
       'Missing worklet bundle asset "$key". Add it per assets/bundles/README.md '
-      '(npm install @tetherto/pear-wrk-wdk@1.0.0-beta.4, copy bundle/*.js). '
-      'Underlying error: $e',
+      '(npm install @tetherto/wdk-react-native-provider@1.0.0-beta.3, copy '
+      'node_modules/@tetherto/wdk-react-native-provider/lib/module/services/'
+      'wdk-service/*.bundle.js). Underlying error: $e',
     );
   }
 }

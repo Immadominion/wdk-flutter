@@ -1,0 +1,517 @@
+[
+  {
+    "enc": "@wdk-core/log-request",
+    "value": {
+      "type": 2,
+      "data": "boom"
+    },
+    "hex": "030204626f6f6d",
+    "decoded": {
+      "type": 2,
+      "data": "boom"
+    }
+  },
+  {
+    "enc": "@wdk-core/log-request",
+    "value": {},
+    "hex": "00",
+    "decoded": {
+      "type": 0,
+      "data": null
+    }
+  },
+  {
+    "enc": "@wdk-core/workletStart-request",
+    "value": {
+      "enableDebugLogs": 0,
+      "seedPhrase": "abandon ability",
+      "config": "{\"a\":1}"
+    },
+    "hex": "020f6162616e646f6e206162696c697479077b2261223a317d",
+    "decoded": {
+      "enableDebugLogs": 0,
+      "seedPhrase": "abandon ability",
+      "seedBuffer": null,
+      "config": "{\"a\":1}"
+    }
+  },
+  {
+    "enc": "@wdk-core/workletStart-request",
+    "value": {
+      "enableDebugLogs": 1,
+      "config": "{}"
+    },
+    "hex": "0101027b7d",
+    "decoded": {
+      "enableDebugLogs": 1,
+      "seedPhrase": null,
+      "seedBuffer": null,
+      "config": "{}"
+    }
+  },
+  {
+    "enc": "@wdk-core/workletStart-response",
+    "value": {
+      "status": "started"
+    },
+    "hex": "010773746172746564",
+    "decoded": {
+      "status": "started"
+    }
+  },
+  {
+    "enc": "@wdk-core/workletStart-response",
+    "value": {},
+    "hex": "00",
+    "decoded": {
+      "status": null
+    }
+  },
+  {
+    "enc": "@wdk-core/dispose-request",
+    "value": {},
+    "hex": "",
+    "decoded": {}
+  },
+  {
+    "enc": "@wdk-core/getAddress-request",
+    "value": {
+      "network": "bitcoin",
+      "accountIndex": 0
+    },
+    "hex": "07626974636f696e00",
+    "decoded": {
+      "network": "bitcoin",
+      "accountIndex": 0
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddress-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 3
+    },
+    "hex": "08657468657265756d03",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 3
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddress-response",
+    "value": {
+      "address": "bc1qxyz"
+    },
+    "hex": "01076263317178797a",
+    "decoded": {
+      "address": "bc1qxyz"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddress-response",
+    "value": {},
+    "hex": "00",
+    "decoded": {
+      "address": null
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddressBalance-request",
+    "value": {
+      "network": "bitcoin",
+      "accountIndex": 0
+    },
+    "hex": "07626974636f696e00",
+    "decoded": {
+      "network": "bitcoin",
+      "accountIndex": 0
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddressBalance-response",
+    "value": {
+      "balance": "123456"
+    },
+    "hex": "0106313233343536",
+    "decoded": {
+      "balance": "123456"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddress-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 0
+    },
+    "hex": "08657468657265756d00",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 0
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddress-response",
+    "value": {
+      "address": "0xabc123"
+    },
+    "hex": "01083078616263313233",
+    "decoded": {
+      "address": "0xabc123"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddressBalance-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 1
+    },
+    "hex": "08657468657265756d01",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 1
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddressBalance-response",
+    "value": {
+      "balance": "999"
+    },
+    "hex": "0103393939",
+    "decoded": {
+      "balance": "999"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddressTokenBalance-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "tokenAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    },
+    "hex": "08657468657265756d002a307864414331374639353844326565353233613232303632303639393435393743313344383331656337",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "tokenAddress": "0xdAC17F958D2ee523a2206206994597C13D831ec7"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAbstractedAddressTokenBalance-response",
+    "value": {
+      "balance": "42"
+    },
+    "hex": "01023432",
+    "decoded": {
+      "balance": "42"
+    }
+  },
+  {
+    "enc": "@wdk-core/quoteSendTransaction-request",
+    "value": {
+      "network": "bitcoin",
+      "accountIndex": 0,
+      "options": {
+        "to": "bc1qrecipient",
+        "value": "1000"
+      }
+    },
+    "hex": "07626974636f696e00130d62633171726563697069656e740431303030",
+    "decoded": {
+      "network": "bitcoin",
+      "accountIndex": 0,
+      "options": {
+        "to": "bc1qrecipient",
+        "value": "1000"
+      }
+    }
+  },
+  {
+    "enc": "@wdk-core/quoteSendTransaction-response",
+    "value": {
+      "fee": "250"
+    },
+    "hex": "0103323530",
+    "decoded": {
+      "fee": "250"
+    }
+  },
+  {
+    "enc": "@wdk-core/sendTransaction-request",
+    "value": {
+      "network": "bitcoin",
+      "accountIndex": 0,
+      "options": {
+        "to": "bc1qrecipient",
+        "value": "5000"
+      }
+    },
+    "hex": "07626974636f696e00130d62633171726563697069656e740435303030",
+    "decoded": {
+      "network": "bitcoin",
+      "accountIndex": 0,
+      "options": {
+        "to": "bc1qrecipient",
+        "value": "5000"
+      }
+    }
+  },
+  {
+    "enc": "@wdk-core/sendTransaction-response",
+    "value": {
+      "fee": "250",
+      "hash": "0xdeadbeef"
+    },
+    "hex": "03033235300a30786465616462656566",
+    "decoded": {
+      "fee": "250",
+      "hash": "0xdeadbeef"
+    }
+  },
+  {
+    "enc": "@wdk-core/sendTransaction-response",
+    "value": {
+      "hash": "0xonlyhash"
+    },
+    "hex": "020a30786f6e6c7968617368",
+    "decoded": {
+      "fee": null,
+      "hash": "0xonlyhash"
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedAccountTransfer-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "options": {
+        "token": "0xToken",
+        "recipient": "0xRecipient",
+        "amount": "1000000"
+      },
+      "config": {
+        "paymasterToken": {
+          "address": "0xPaymaster"
+        }
+      }
+    },
+    "hex": "08657468657265756d001c073078546f6b656e0b3078526563697069656e740731303030303030010e010c0b30785061796d6173746572",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "options": {
+        "token": "0xToken",
+        "recipient": "0xRecipient",
+        "amount": "1000000"
+      },
+      "config": {
+        "paymasterToken": {
+          "address": "0xPaymaster"
+        }
+      }
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedAccountTransfer-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 2,
+      "options": {
+        "token": "0xToken",
+        "recipient": "0xRecipient",
+        "amount": "5"
+      }
+    },
+    "hex": "08657468657265756d0216073078546f6b656e0b3078526563697069656e74013500",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 2,
+      "options": {
+        "token": "0xToken",
+        "recipient": "0xRecipient",
+        "amount": "5"
+      },
+      "config": null
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedAccountTransfer-response",
+    "value": {
+      "hash": "0xhash",
+      "fee": "9"
+    },
+    "hex": "03063078686173680139",
+    "decoded": {
+      "hash": "0xhash",
+      "fee": "9"
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedAccountQuoteTransfer-request",
+    "value": {
+      "network": "polygon",
+      "accountIndex": 1,
+      "options": {
+        "token": "0xT",
+        "recipient": "0xR",
+        "amount": "250000"
+      },
+      "config": {
+        "paymasterToken": {
+          "address": "0xP"
+        }
+      }
+    },
+    "hex": "07706f6c79676f6e010f0330785403307852063235303030300106010403307850",
+    "decoded": {
+      "network": "polygon",
+      "accountIndex": 1,
+      "options": {
+        "token": "0xT",
+        "recipient": "0xR",
+        "amount": "250000"
+      },
+      "config": {
+        "paymasterToken": {
+          "address": "0xP"
+        }
+      }
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedAccountQuoteTransfer-response",
+    "value": {
+      "fee": "7"
+    },
+    "hex": "010137",
+    "decoded": {
+      "fee": "7"
+    }
+  },
+  {
+    "enc": "@wdk-core/getApproveTransaction-request",
+    "value": {
+      "token": "0xToken",
+      "recipient": "0xRecipient",
+      "amount": "1000000"
+    },
+    "hex": "073078546f6b656e0b3078526563697069656e740731303030303030",
+    "decoded": {
+      "token": "0xToken",
+      "recipient": "0xRecipient",
+      "amount": "1000000"
+    }
+  },
+  {
+    "enc": "@wdk-core/getApproveTransaction-response",
+    "value": {
+      "to": "0xto",
+      "value": "0",
+      "data": "0xcalldata"
+    },
+    "hex": "043078746f01300a307863616c6c64617461",
+    "decoded": {
+      "to": "0xto",
+      "value": "0",
+      "data": "0xcalldata"
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedSendTransaction-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "options": "{\"to\":\"0x1\",\"data\":\"0x2\"}",
+      "config": {
+        "paymasterToken": {
+          "address": "0xP"
+        }
+      }
+    },
+    "hex": "08657468657265756d00197b22746f223a22307831222c2264617461223a22307832227d0106010403307850",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "options": "{\"to\":\"0x1\",\"data\":\"0x2\"}",
+      "config": {
+        "paymasterToken": {
+          "address": "0xP"
+        }
+      }
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedSendTransaction-request",
+    "value": {
+      "network": "arbitrum",
+      "accountIndex": 0,
+      "options": "{\"to\":\"0x1\"}"
+    },
+    "hex": "08617262697472756d000c7b22746f223a22307831227d00",
+    "decoded": {
+      "network": "arbitrum",
+      "accountIndex": 0,
+      "options": "{\"to\":\"0x1\"}",
+      "config": null
+    }
+  },
+  {
+    "enc": "@wdk-core/abstractedSendTransaction-response",
+    "value": {
+      "hash": "0xh",
+      "fee": "3"
+    },
+    "hex": "03033078680133",
+    "decoded": {
+      "hash": "0xh",
+      "fee": "3"
+    }
+  },
+  {
+    "enc": "@wdk-core/getTransactionReceipt-request",
+    "value": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "hash": "0xabc"
+    },
+    "hex": "08657468657265756d00053078616263",
+    "decoded": {
+      "network": "ethereum",
+      "accountIndex": 0,
+      "hash": "0xabc"
+    }
+  },
+  {
+    "enc": "@wdk-core/getTransactionReceipt-response",
+    "value": {
+      "receipt": "{\"status\":1}"
+    },
+    "hex": "010c7b22737461747573223a317d",
+    "decoded": {
+      "receipt": "{\"status\":1}"
+    }
+  },
+  {
+    "enc": "@wdk-core/getAddress-response",
+    "value": {
+      "address": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "hex": "01fd2c01616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161616161",
+    "decoded": {
+      "address": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  },
+  {
+    "enc": "@wdk-core/getApproveTransaction-response",
+    "value": {
+      "to": "héllo 🌍",
+      "value": "x",
+      "data": "y"
+    },
+    "hex": "0b68c3a96c6c6f20f09f8c8d01780179",
+    "decoded": {
+      "to": "héllo 🌍",
+      "value": "x",
+      "data": "y"
+    }
+  }
+]

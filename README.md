@@ -115,20 +115,22 @@ React Native starter. Swap the public RPC URLs for keyed endpoints in production
 
 - All Dart layers: provider/state, UI kit, indexer + pricing clients, address
   validation, the encrypted-seed salt — unit/widget tested.
-- **The WDK wire protocol, byte-for-byte.** `compact-encoding`, the
-  secret-manager HRPC **message codecs**, and the full **`bare-rpc` envelope**
-  are ported to Dart and verified against Tether's *real* JS encoders (vectors
-  in `tools/parity/`). The secret-manager worklet path speaks real HRPC end to
-  end (`HrpcWorkletRpc`), exercised by a loopback round-trip incl. error frames.
+- **The WDK wire protocol, byte-for-byte — both worklets.** `compact-encoding`,
+  the **secret-manager** HRPC message codecs, the **manager** (`@wdk-core`) HRPC
+  message codecs (all 15 commands, incl. `c.frame` nested objects), and the full
+  **`bare-rpc` envelope** are ported to Dart and verified against Tether's *real*
+  JS encoders (vectors in `tools/parity/`). Both worklet paths speak real HRPC
+  end to end (`HrpcWorkletRpc` with `HrpcProtocol.secretManager` /
+  `HrpcProtocol.wdkManager`), exercised by loopback round-trips incl. error
+  frames and send-only `dispose`.
 
 ### What needs a device (native bring-up, in progress)
 
 - The `flutter_bare_kit` native build (Android NDK/CMake + iOS BareKit pod) that
-  actually runs the worklet, then loading the pinned `pear-wrk-wdk@beta.4`
-  bundles, the on-device **same-mnemonic → same-address** check vs the RN
-  starter, full multi-chain flows, and the demo video (M3).
-- The **manager** (`@wdk-core`) RPC still uses the semantic JSON reference codec
-  pending the version-pinned body codecs (see `tools/parity/README.md`).
+  actually runs the worklet, then loading the pinned worklet bundles (shipped in
+  `wdk-react-native-provider@beta.3`), the on-device **same-mnemonic →
+  same-address** check vs the RN starter, full multi-chain flows, and the demo
+  video (M3).
 
 The detailed plan, milestones, and risk register are in [ROADMAP.md](ROADMAP.md).
 
